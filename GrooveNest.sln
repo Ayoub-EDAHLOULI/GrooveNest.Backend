@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveNest.Repository", "Gr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveNest.Service", "GrooveNest.Service\GrooveNest.Service.csproj", "{AD7A5F2C-9289-4009-BB75-50CB1253BEB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveNest.Utilities", "GrooveNest.Utilities\GrooveNest.Utilities.csproj", "{8FE04591-41A7-4D10-97E5-2D53181C15BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AD7A5F2C-9289-4009-BB75-50CB1253BEB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD7A5F2C-9289-4009-BB75-50CB1253BEB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD7A5F2C-9289-4009-BB75-50CB1253BEB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FE04591-41A7-4D10-97E5-2D53181C15BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FE04591-41A7-4D10-97E5-2D53181C15BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FE04591-41A7-4D10-97E5-2D53181C15BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FE04591-41A7-4D10-97E5-2D53181C15BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
