@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35931.197 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveNest.API", "GrooveNest.API\GrooveNest.API.csproj", "{FFF8E98A-5DBA-4DB4-90B9-870CB304C239}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrooveNest.Domain", "GrooveNest.Domain\GrooveNest.Domain.csproj", "{BE93B3BC-58ED-46B0-BA69-25FA1C880AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FFF8E98A-5DBA-4DB4-90B9-870CB304C239}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFF8E98A-5DBA-4DB4-90B9-870CB304C239}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFF8E98A-5DBA-4DB4-90B9-870CB304C239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE93B3BC-58ED-46B0-BA69-25FA1C880AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE93B3BC-58ED-46B0-BA69-25FA1C880AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE93B3BC-58ED-46B0-BA69-25FA1C880AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE93B3BC-58ED-46B0-BA69-25FA1C880AE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
