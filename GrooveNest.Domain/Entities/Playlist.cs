@@ -13,5 +13,7 @@
         // --------------------------------------------------- //
         public Guid OwnerId { get; set; }
         public User User { get; set; } = null!;
+
+        public ICollection<PlaylistTrack> PlaylistTracks { get; set; } = [];
     }
 }

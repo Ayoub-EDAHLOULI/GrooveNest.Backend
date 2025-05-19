@@ -16,5 +16,6 @@
         public Album Album { get; set; } = null!;
 
         public ICollection<TrackGenre> TrackGenres { get; set; } = [];
+        public ICollection<PlaylistTrack> PlaylistTracks { get; set; } = [];
     }
 }
