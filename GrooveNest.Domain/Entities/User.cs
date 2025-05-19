@@ -9,14 +9,16 @@
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
         // --------------------------------------------------- //
         // ---------------- Relationship Area ---------------- //
         // --------------------------------------------------- //
+
+        public Artist? Artist { get; set; } // Nullable for non-artist users
+
         public ICollection<UserRole> UserRoles { get; set; } = [];
-        public ICollection<Artist> Artists { get; set; } = [];
         public ICollection<Playlist> Playlists { get; set; } = [];
         public ICollection<Comment> Comments { get; set; } = [];
         public ICollection<Like> Likes { get; set; } = [];
