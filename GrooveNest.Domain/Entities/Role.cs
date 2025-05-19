@@ -7,5 +7,11 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+
+
+        // --------------------------------------------------- //
+        // ---------------- Relationship Area ---------------- //
+        // --------------------------------------------------- //
+        public ICollection<UserRole> UserRoles { get; set; } = [];
     }
 }

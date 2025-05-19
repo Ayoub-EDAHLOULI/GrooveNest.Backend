@@ -10,5 +10,11 @@
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+
+
+        // --------------------------------------------------- //
+        // ---------------- Relationship Area ---------------- //
+        // --------------------------------------------------- //
+        public ICollection<UserRole> UserRoles { get; set; } = [];
     }
 }
