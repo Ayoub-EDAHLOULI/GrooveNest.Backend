@@ -16,5 +16,9 @@
         // ---------------- Relationship Area ---------------- //
         // --------------------------------------------------- //
         public ICollection<UserRole> UserRoles { get; set; } = [];
+        public ICollection<Artist> Artists { get; set; } = [];
+        public ICollection<Playlist> Playlists { get; set; } = [];
+        public ICollection<Comment> Comments { get; set; } = [];
+        public ICollection<Like> Likes { get; set; } = [];
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Playlist
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = null!;
         public bool IsPublic { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

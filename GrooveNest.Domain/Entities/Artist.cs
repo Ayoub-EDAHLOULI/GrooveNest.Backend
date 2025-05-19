@@ -13,5 +13,7 @@
         // --------------------------------------------------- //
         public Guid? UserId { get; set; }
         public User? User { get; set; }
+        public ICollection<Track> Tracks { get; set; } = [];
+        public ICollection<Album> Albums { get; set; } = [];
     }
 }

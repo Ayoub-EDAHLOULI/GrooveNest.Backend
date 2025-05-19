@@ -2,7 +2,7 @@
 {
     public class Track
     {
-        public int Id { get; set; }
+        public Guid TrackId { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;
         public int DurationSec { get; set; }
         public string AudioUrl { get; set; } = null!;
@@ -12,10 +12,15 @@
         // --------------------------------------------------- //
         // ---------------- Relationship Area ---------------- //
         // --------------------------------------------------- //
-        public int AlbumId { get; set; }
-        public Album Album { get; set; } = null!;
+        public Guid ArtistId { get; set; }
+        public Artist Artist { get; set; } = null!;
+
+        public Guid? AlbumId { get; set; }
+        public Album? Album { get; set; } // Nullable for tracks not in an album
 
         public ICollection<TrackGenre> TrackGenres { get; set; } = [];
         public ICollection<PlaylistTrack> PlaylistTracks { get; set; } = [];
+        public ICollection<Comment> Comments { get; set; } = [];
+        public ICollection<Like> Likes { get; set; } = [];
     }
 }
