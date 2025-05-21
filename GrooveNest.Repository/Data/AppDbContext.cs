@@ -56,6 +56,17 @@ namespace GrooveNest.Repository.Data
             userEntity.Property(u => u.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
 
+
+            // ---------------------------------------------------- //
+            // ------------ ** Artist Configuration ** ------------ //
+            // ---------------------------------------------------- //
+
+            artistEntity.HasKey(a => a.Id);
+
+            artistEntity.Property(a => a.Name).IsRequired().HasMaxLength(100);
+            artistEntity.Property(a => a.Bio).HasMaxLength(500);
+            artistEntity.Property(a => a.AvatarUrl).HasMaxLength(200);
+
         }
     }
 }
