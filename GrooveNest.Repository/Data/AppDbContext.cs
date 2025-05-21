@@ -233,6 +233,16 @@ namespace GrooveNest.Repository.Data
                 .HasMany(t => t.Comments)
                 .WithOne(c => c.Track)
                 .HasForeignKey(c => c.TrackId);
+
+
+            // --------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationship Track → Rating ------------- //
+            // --------------------------------------------------------------------------- //
+
+            modelBuilder.Entity<Track>()
+                .HasMany(t => t.Ratings)
+                .WithOne(r => r.Track)
+                .HasForeignKey(r => r.TrackId);
         }
     }
 }
