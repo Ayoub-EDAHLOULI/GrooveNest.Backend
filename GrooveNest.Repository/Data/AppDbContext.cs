@@ -20,5 +20,29 @@ namespace GrooveNest.Repository.Data
         public DbSet<Rating> Ratings { get; set; }
 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+
+            // ************ Entity Configuration ************ //
+
+            var userEntity = modelBuilder.Entity<User>();
+            var artistEntity = modelBuilder.Entity<Artist>();
+            var albumEntity = modelBuilder.Entity<Album>();
+            var trackEntity = modelBuilder.Entity<Track>();
+            var playlistEntity = modelBuilder.Entity<Playlist>();
+            var genreEntity = modelBuilder.Entity<Genre>();
+            var trackGenreEntity = modelBuilder.Entity<TrackGenre>();
+            var playlistTrackEntity = modelBuilder.Entity<PlaylistTrack>();
+            var commentEntity = modelBuilder.Entity<Comment>();
+            var likeEntity = modelBuilder.Entity<Like>();
+            var roleEntity = modelBuilder.Entity<Role>();
+            var userRoleEntity = modelBuilder.Entity<UserRole>();
+            var ratingEntity = modelBuilder.Entity<Rating>();
+
+
+
+        }
     }
 }
