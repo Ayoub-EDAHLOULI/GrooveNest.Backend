@@ -89,6 +89,17 @@ namespace GrooveNest.Repository.Data
             trackEntity.Property(t => t.DurationSec).IsRequired();
             trackEntity.Property(t => t.AudioUrl).IsRequired().HasMaxLength(200);
             trackEntity.Property(t => t.TrackNumber).IsRequired();
+
+
+            // ------------------------------------------------------ //
+            // ------------ ** Playlist Configuration ** ------------ //
+            // ------------------------------------------------------ //
+
+            playlistEntity.HasKey(p => p.Id);
+
+            playlistEntity.Property(p => p.Name).IsRequired().HasMaxLength(100);
+            playlistEntity.Property(p => p.IsPublic).IsRequired();
+            playlistEntity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }
