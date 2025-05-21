@@ -68,6 +68,7 @@ namespace GrooveNest.Repository.Data
             artistEntity.Property(a => a.AvatarUrl).HasMaxLength(200);
 
 
+
             // --------------------------------------------------- //
             // ------------ ** Album Configuration ** ------------ //
             // --------------------------------------------------- //
@@ -77,6 +78,7 @@ namespace GrooveNest.Repository.Data
             albumEntity.Property(a => a.Title).IsRequired().HasMaxLength(100);
             albumEntity.Property(a => a.ReleaseDate).IsRequired();
             albumEntity.Property(a => a.CoverUrl).HasMaxLength(200);
+
 
 
             // --------------------------------------------------- //
@@ -91,6 +93,7 @@ namespace GrooveNest.Repository.Data
             trackEntity.Property(t => t.TrackNumber).IsRequired();
 
 
+
             // ------------------------------------------------------ //
             // ------------ ** Playlist Configuration ** ------------ //
             // ------------------------------------------------------ //
@@ -100,6 +103,17 @@ namespace GrooveNest.Repository.Data
             playlistEntity.Property(p => p.Name).IsRequired().HasMaxLength(100);
             playlistEntity.Property(p => p.IsPublic).IsRequired();
             playlistEntity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+
+
+            // --------------------------------------------------- //
+            // ------------ ** Genre Configuration ** ------------ //
+            // --------------------------------------------------- //
+
+            genreEntity.HasKey(g => g.Id);
+
+            genreEntity.Property(g => g.Name).IsRequired().HasMaxLength(50);
+            genreEntity.HasIndex(g => g.Name).IsUnique();
         }
     }
 }
