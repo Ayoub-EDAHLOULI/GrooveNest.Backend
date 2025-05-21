@@ -36,7 +36,6 @@ namespace GrooveNest.Repository.Data
             var commentEntity = modelBuilder.Entity<Comment>();
             var likeEntity = modelBuilder.Entity<Like>();
             var roleEntity = modelBuilder.Entity<Role>();
-            var userRoleEntity = modelBuilder.Entity<UserRole>();
             var ratingEntity = modelBuilder.Entity<Rating>();
 
 
@@ -141,6 +140,17 @@ namespace GrooveNest.Repository.Data
             roleEntity.HasKey(r => r.Id);
 
             roleEntity.Property(r => r.Name).IsRequired().HasMaxLength(50);
+
+
+
+            // ---------------------------------------------------- //
+            // ------------ ** Rating Configuration ** ------------ //
+            // ---------------------------------------------------- //
+
+            ratingEntity.HasKey(r => r.Id);
+
+            ratingEntity.Property(r => r.Stars).IsRequired();
+            ratingEntity.Property(r => r.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }
