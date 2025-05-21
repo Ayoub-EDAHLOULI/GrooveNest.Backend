@@ -169,6 +169,21 @@ namespace GrooveNest.Repository.Data
                 .HasForeignKey<Artist>(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+
+
+            // ************ One to Many Relationship Configuration ************ //
+
+
+            // --------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationships User  --------------------- //
+            // ----------------------------------------------------------------------------//
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Playlists)
+                .WithOne(p => p.Owner)
+                .HasForeignKey(p => p.OwnerId);
+
         }
     }
 }
