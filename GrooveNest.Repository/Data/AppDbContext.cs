@@ -276,6 +276,27 @@ namespace GrooveNest.Repository.Data
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            // ---------------------------------------------------------------------- //
+            // --------------------- Many-to-Many Relationship Track ↔ Genre -------- //
+            // ---------------------------------------------------------------------- //
+
+            modelBuilder.Entity<TrackGenre>()
+                .HasKey(tg => new { tg.TrackId, tg.GenreId });
+
+            modelBuilder.Entity<TrackGenre>()
+                .HasOne(tg => tg.Track)
+                .WithMany(t => t.TrackGenres)
+                .HasForeignKey(tg => tg.TrackId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TrackGenre>()
+                .HasOne(tg => tg.Genre)
+                .WithMany(g => g.TrackGenres)
+                .HasForeignKey(tg => tg.GenreId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
