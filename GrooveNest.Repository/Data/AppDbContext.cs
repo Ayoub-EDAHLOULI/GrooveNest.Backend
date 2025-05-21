@@ -123,6 +123,14 @@ namespace GrooveNest.Repository.Data
 
             commentEntity.Property(c => c.Content).IsRequired().HasMaxLength(500);
             commentEntity.Property(c => c.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+
+
+            // -------------------------------------------------- //
+            // ------------ ** Like Configuration ** ------------ //
+            // -------------------------------------------------- //
+
+            likeEntity.Property(l => l.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }
