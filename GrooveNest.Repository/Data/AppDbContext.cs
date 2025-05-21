@@ -258,9 +258,9 @@ namespace GrooveNest.Repository.Data
             // ************ Many to Many Relationship Configuration ************ //
 
 
-            // --------------------------------------------------------------------- //
-            // --------------------- Many-to-Many Relationship User ↔ Role --------- //
-            // --------------------------------------------------------------------- //
+            // -------------------------------------------------------------------------- //
+            // --------------------- Many-to-Many Relationship User ↔ Role -------------- //
+            // -------------------------------------------------------------------------- //
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
@@ -279,9 +279,9 @@ namespace GrooveNest.Repository.Data
 
 
 
-            // ---------------------------------------------------------------------- //
-            // --------------------- Many-to-Many Relationship Track ↔ Genre -------- //
-            // ---------------------------------------------------------------------- //
+            // --------------------------------------------------------------------------- //
+            // --------------------- Many-to-Many Relationship Track ↔ Genre ------------- //
+            // --------------------------------------------------------------------------- //
 
             modelBuilder.Entity<TrackGenre>()
                 .HasKey(tg => new { tg.TrackId, tg.GenreId });
@@ -300,9 +300,9 @@ namespace GrooveNest.Repository.Data
 
 
 
-            // ---------------------------------------------------------------------- //
-            // --------------------- Many-to-Many Relationship Playlist ↔ Track ----- //
-            // ---------------------------------------------------------------------- //
+            // -------------------------------------------------------------------------------- //
+            // --------------------- Many-to-Many Relationship Playlist ↔ Track --------------- //
+            // -------------------------------------------------------------------------------- //
 
             modelBuilder.Entity<PlaylistTrack>()
                 .HasKey(pt => new { pt.PlaylistId, pt.TrackId });
@@ -317,6 +317,26 @@ namespace GrooveNest.Repository.Data
                 .HasOne(pt => pt.Track)
                 .WithMany(t => t.PlaylistTracks)
                 .HasForeignKey(pt => pt.TrackId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // ----------------------------------------------------------------------------- //
+            // --------------------- Many-to-Many Relationship User ↔ Track ---------------- //
+            // ----------------------------------------------------------------------------- //
+
+            modelBuilder.Entity<Like>()
+                .HasKey(l => new { l.UserId, l.TrackId });
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.User)
+                .WithMany(u => u.Likes)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(l => l.Track)
+                .WithMany(t => t.Likes)
+                .HasForeignKey(l => l.TrackId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
