@@ -77,6 +77,18 @@ namespace GrooveNest.Repository.Data
             albumEntity.Property(a => a.Title).IsRequired().HasMaxLength(100);
             albumEntity.Property(a => a.ReleaseDate).IsRequired();
             albumEntity.Property(a => a.CoverUrl).HasMaxLength(200);
+
+
+            // --------------------------------------------------- //
+            // ------------ ** Track Configuration ** ------------ //
+            // --------------------------------------------------- //
+
+            trackEntity.HasKey(t => t.Id);
+
+            trackEntity.Property(t => t.Title).IsRequired().HasMaxLength(100);
+            trackEntity.Property(t => t.DurationSec).IsRequired();
+            trackEntity.Property(t => t.AudioUrl).IsRequired().HasMaxLength(200);
+            trackEntity.Property(t => t.TrackNumber).IsRequired();
         }
     }
 }
