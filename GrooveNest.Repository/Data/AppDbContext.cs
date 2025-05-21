@@ -151,6 +151,24 @@ namespace GrooveNest.Repository.Data
 
             ratingEntity.Property(r => r.Stars).IsRequired();
             ratingEntity.Property(r => r.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+
+
+
+
+            // ************ One to One Relationship Configuration ************ //
+
+
+            // -------------------------------------------------- //
+            // -------------- ** User - Artist ** --------------- //
+            // -------------------------------------------------- //
+
+            userEntity
+                .HasOne(u => u.Artist)
+                .WithOne(a => a.User)
+                .HasForeignKey<Artist>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
