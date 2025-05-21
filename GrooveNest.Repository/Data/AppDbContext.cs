@@ -213,6 +213,16 @@ namespace GrooveNest.Repository.Data
                 .HasMany(al => al.Tracks)
                 .WithOne(t => t.Album)
                 .HasForeignKey(t => t.AlbumId);
+
+
+            // ---------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationship Track → Comment ------------- //
+            // ---------------------------------------------------------------------------- //
+
+            modelBuilder.Entity<Track>()
+                .HasMany(t => t.Comments)
+                .WithOne(c => c.Track)
+                .HasForeignKey(c => c.TrackId);
         }
     }
 }
