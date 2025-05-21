@@ -195,8 +195,14 @@ namespace GrooveNest.Repository.Data
                 .HasForeignKey(c => c.UserId);
 
 
+            // --------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationship Artist → Album ------------- //
+            // --------------------------------------------------------------------------- //
 
-
+            modelBuilder.Entity<Artist>()
+                .HasMany(a => a.Albums)
+                .WithOne(al => al.Artist)
+                .HasForeignKey(al => al.ArtistId);
         }
     }
 }
