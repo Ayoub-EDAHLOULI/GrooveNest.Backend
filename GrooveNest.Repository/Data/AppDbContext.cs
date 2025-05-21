@@ -183,7 +183,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(u => u.Playlists)
                 .WithOne(p => p.Owner)
                 .HasForeignKey(p => p.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // ---------------------------------------------------------------------------- //
@@ -194,7 +194,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(u => u.Comments)
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // -------------------------------------------------------------------------- //
@@ -205,7 +205,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(u => u.Ratings)
                 .WithOne(r => r.User)
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // --------------------------------------------------------------------------- //
@@ -216,7 +216,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(a => a.Albums)
                 .WithOne(al => al.Artist)
                 .HasForeignKey(al => al.ArtistId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // -------------------------------------------------------------------------- //
@@ -227,7 +227,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(al => al.Tracks)
                 .WithOne(t => t.Album)
                 .HasForeignKey(t => t.AlbumId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // ---------------------------------------------------------------------------- //
@@ -238,7 +238,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(t => t.Comments)
                 .WithOne(c => c.Track)
                 .HasForeignKey(c => c.TrackId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // --------------------------------------------------------------------------- //
@@ -249,7 +249,7 @@ namespace GrooveNest.Repository.Data
                 .HasMany(t => t.Ratings)
                 .WithOne(r => r.Track)
                 .HasForeignKey(r => r.TrackId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -280,13 +280,13 @@ namespace GrooveNest.Repository.Data
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)
                 .HasForeignKey(ur => ur.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -301,13 +301,13 @@ namespace GrooveNest.Repository.Data
                 .HasOne(tg => tg.Track)
                 .WithMany(t => t.TrackGenres)
                 .HasForeignKey(tg => tg.TrackId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TrackGenre>()
                 .HasOne(tg => tg.Genre)
                 .WithMany(g => g.TrackGenres)
                 .HasForeignKey(tg => tg.GenreId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 
@@ -322,13 +322,13 @@ namespace GrooveNest.Repository.Data
                 .HasOne(pt => pt.Playlist)
                 .WithMany(p => p.PlaylistTracks)
                 .HasForeignKey(pt => pt.PlaylistId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PlaylistTrack>()
                 .HasOne(pt => pt.Track)
                 .WithMany(t => t.PlaylistTracks)
                 .HasForeignKey(pt => pt.TrackId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // ----------------------------------------------------------------------------- //
@@ -342,13 +342,13 @@ namespace GrooveNest.Repository.Data
                 .HasOne(l => l.User)
                 .WithMany(u => u.Likes)
                 .HasForeignKey(l => l.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Like>()
                 .HasOne(l => l.Track)
                 .WithMany(t => t.Likes)
                 .HasForeignKey(l => l.TrackId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
