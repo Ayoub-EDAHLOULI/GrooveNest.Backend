@@ -253,6 +253,17 @@ namespace GrooveNest.Repository.Data
 
 
 
+            // --------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationship Artist → Track ------------- //
+            // --------------------------------------------------------------------------- //
+
+            modelBuilder.Entity<Artist>()
+                .HasMany(a => a.Tracks)
+                .WithOne(t => t.Artist)
+                .HasForeignKey(t => t.ArtistId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
 
 
             // ************ Many to Many Relationship Configuration ************ //
