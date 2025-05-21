@@ -131,6 +131,16 @@ namespace GrooveNest.Repository.Data
             // -------------------------------------------------- //
 
             likeEntity.Property(l => l.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+
+
+            // -------------------------------------------------- //
+            // ------------ ** Role Configuration ** ------------ //
+            // -------------------------------------------------- //
+
+            roleEntity.HasKey(r => r.Id);
+
+            roleEntity.Property(r => r.Name).IsRequired().HasMaxLength(50);
         }
     }
 }
