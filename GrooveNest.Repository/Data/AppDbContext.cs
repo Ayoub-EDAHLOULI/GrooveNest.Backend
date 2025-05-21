@@ -176,13 +176,26 @@ namespace GrooveNest.Repository.Data
 
 
             // --------------------------------------------------------------------------- //
-            // --------------------- One-to-Many Relationships User  --------------------- //
-            // ----------------------------------------------------------------------------//
+            // --------------------- One-to-Many Relationship User → Playlists ----------- //
+            // --------------------------------------------------------------------------- //
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Playlists)
                 .WithOne(p => p.Owner)
                 .HasForeignKey(p => p.OwnerId);
+
+
+            // ---------------------------------------------------------------------------- //
+            // --------------------- One-to-Many Relationship User → Comments ------------- //
+            // ---------------------------------------------------------------------------- //
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Comments)
+                .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId);
+
+
+
 
         }
     }
