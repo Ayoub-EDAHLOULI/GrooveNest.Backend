@@ -67,6 +67,16 @@ namespace GrooveNest.Repository.Data
             artistEntity.Property(a => a.Bio).HasMaxLength(500);
             artistEntity.Property(a => a.AvatarUrl).HasMaxLength(200);
 
+
+            // --------------------------------------------------- //
+            // ------------ ** Album Configuration ** ------------ //
+            // --------------------------------------------------- //
+
+            albumEntity.HasKey(a => a.Id);
+
+            albumEntity.Property(a => a.Title).IsRequired().HasMaxLength(100);
+            albumEntity.Property(a => a.ReleaseDate).IsRequired();
+            albumEntity.Property(a => a.CoverUrl).HasMaxLength(200);
         }
     }
 }

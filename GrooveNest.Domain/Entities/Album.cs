@@ -2,7 +2,7 @@
 {
     public class Album
     {
-        public Guid AlbumId { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;
         public DateTime ReleaseDate { get; set; }
         public string? CoverUrl { get; set; }

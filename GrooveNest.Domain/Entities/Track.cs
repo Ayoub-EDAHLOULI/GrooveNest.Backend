@@ -2,7 +2,7 @@
 {
     public class Track
     {
-        public Guid TrackId { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; } = null!;
         public int DurationSec { get; set; }
         public string AudioUrl { get; set; } = null!;
