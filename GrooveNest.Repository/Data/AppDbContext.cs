@@ -42,6 +42,19 @@ namespace GrooveNest.Repository.Data
             var ratingEntity = modelBuilder.Entity<Rating>();
 
 
+            // -------------------------------------------------- //
+            // ------------ ** User Configuration ** ------------ //
+            // -------------------------------------------------- //
+
+            userEntity.HasKey(u => u.Id);
+
+            userEntity.Property(u => u.UserName).IsRequired().HasMaxLength(50);
+            userEntity.HasIndex(u => u.UserName).IsUnique();
+            userEntity.Property(u => u.Email).IsRequired().HasMaxLength(100);
+            userEntity.HasIndex(u => u.Email).IsUnique();
+            userEntity.Property(u => u.Password).IsRequired().HasMaxLength(100);
+            userEntity.Property(u => u.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
 
         }
     }
