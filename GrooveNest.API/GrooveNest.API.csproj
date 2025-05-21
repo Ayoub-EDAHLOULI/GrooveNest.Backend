@@ -4,14 +4,26 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>77d01615-c8fd-481c-96d5-5de825447662</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GrooveNest.Domain\GrooveNest.Domain.csproj" />
+    <ProjectReference Include="..\GrooveNest.Repository\GrooveNest.Repository.csproj" />
+    <ProjectReference Include="..\GrooveNest.Service\GrooveNest.Service.csproj" />
+    <ProjectReference Include="..\GrooveNest.Utilities\GrooveNest.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
