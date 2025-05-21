@@ -33,8 +33,6 @@ namespace GrooveNest.Repository.Data
             var trackEntity = modelBuilder.Entity<Track>();
             var playlistEntity = modelBuilder.Entity<Playlist>();
             var genreEntity = modelBuilder.Entity<Genre>();
-            var trackGenreEntity = modelBuilder.Entity<TrackGenre>();
-            var playlistTrackEntity = modelBuilder.Entity<PlaylistTrack>();
             var commentEntity = modelBuilder.Entity<Comment>();
             var likeEntity = modelBuilder.Entity<Like>();
             var roleEntity = modelBuilder.Entity<Role>();
@@ -114,6 +112,17 @@ namespace GrooveNest.Repository.Data
 
             genreEntity.Property(g => g.Name).IsRequired().HasMaxLength(50);
             genreEntity.HasIndex(g => g.Name).IsUnique();
+
+
+
+            // ----------------------------------------------------- //
+            // ------------ ** Comment Configuration ** ------------ //
+            // ----------------------------------------------------- //
+
+            commentEntity.HasKey(c => c.Id);
+
+            commentEntity.Property(c => c.Content).IsRequired().HasMaxLength(500);
+            commentEntity.Property(c => c.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }
 }
