@@ -4,6 +4,7 @@ using GrooveNest.Domain.Validators;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
+using static BCrypt.Net.BCrypt;
 
 namespace GrooveNest.Service.Services
 {
@@ -137,14 +138,17 @@ namespace GrooveNest.Service.Services
                 return ApiResponse<UserResponseDto>.ErrorResponse("Username already exists");
             }
 
+            // Bcrypt password
+            var hashedPassword = HashPassword(StringValidator.TrimOrEmpty(userCreateDto.Password));
+
             // Create new user
             var newUser = new User
             {
                 Id = Guid.NewGuid(),
                 UserName = StringValidator.TrimOrEmpty(userCreateDto.UserName),
                 Email = StringValidator.TrimOrEmpty(userCreateDto.Email),
-                Password = StringValidator.TrimOrEmpty(userCreateDto.Password),
-                CreatedAt = DateTime.UtcNow,
+                Password = hashedPassword,
+                CreatedAt = DateTime.UtcNow
             };
 
             // Save new user to the database

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GrooveNest.Domain\GrooveNest.Domain.csproj" />
     <ProjectReference Include="..\GrooveNest.Repository\GrooveNest.Repository.csproj" />
     <ProjectReference Include="..\GrooveNest.Utilities\GrooveNest.Utilities.csproj" />
