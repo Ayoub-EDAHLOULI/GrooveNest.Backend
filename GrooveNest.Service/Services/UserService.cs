@@ -85,7 +85,7 @@ namespace GrooveNest.Service.Services
 
 
         // ------------------------------------------------------------------------- //
-        // ------------------------ GetAllUsersAsync METHODS ----------------------- //
+        // ------------------------ GetUserByIdAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
         public async Task<ApiResponse<UserResponseDto>> GetUserByIdAsync(Guid id)
         {
@@ -108,19 +108,22 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ GetUserByIdAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
 
-
-
-
-
-
-
-
-
-        public Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
+        public async Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
+            // Validate if any required field is null or empty, if so, return error response
             throw new NotImplementedException();
         }
+
+
+
+
+
+
+
 
         public Task<ApiResponse<string>> DeleteUserAsync(Guid id)
         {

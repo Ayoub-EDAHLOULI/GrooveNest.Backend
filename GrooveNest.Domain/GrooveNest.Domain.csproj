@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GrooveNest.Utilities\GrooveNest.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
