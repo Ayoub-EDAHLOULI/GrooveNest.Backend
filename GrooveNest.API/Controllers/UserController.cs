@@ -89,5 +89,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserAsync(Guid id)
+        {
+            var response = await _userService.DeleteUserAsync(id);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
