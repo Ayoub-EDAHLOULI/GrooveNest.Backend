@@ -1,6 +1,8 @@
 using GrooveNest.Repository.Data;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Repository.Repositories;
+using GrooveNest.Service.Interfaces;
+using GrooveNest.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,19 @@ builder.Services.AddSwaggerGen();
 
 // Register repositories and services
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
+
+builder.Services.AddScoped<UserRepository>();
+
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+builder.Services.AddScoped<UserService>();
+
+
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 
 var app = builder.Build();
