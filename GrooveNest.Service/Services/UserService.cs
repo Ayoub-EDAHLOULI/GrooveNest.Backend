@@ -1,4 +1,6 @@
 ﻿using GrooveNest.Domain.DTOs.UserDTOs;
+using GrooveNest.Domain.Entities;
+using GrooveNest.Domain.Validators;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
@@ -115,7 +117,56 @@ namespace GrooveNest.Service.Services
         public async Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
             // Validate if any required field is null or empty, if so, return error response
-            throw new NotImplementedException();
+            var validationResponse = UserValidator.ValidateCreate(userCreateDto);
+            if (validationResponse != null)
+            {
+                return validationResponse;
+            }
+
+            // Check if email already exists
+            var existingUser = await _userRepository.GetByEmailAsync(StringValidator.TrimOrEmpty(userCreateDto.Email));
+            if (existingUser != null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Email already exists");
+            }
+
+            // Check if username already exists
+            var existingUserName = await _userRepository.GetByUserNameAsync(StringValidator.TrimOrEmpty(userCreateDto.UserName));
+            if (existingUserName != null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Username already exists");
+            }
+
+            // Create new user
+            var newUser = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = StringValidator.TrimOrEmpty(userCreateDto.UserName),
+                Email = StringValidator.TrimOrEmpty(userCreateDto.Email),
+                Password = StringValidator.TrimOrEmpty(userCreateDto.Password),
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            // Save new user to the database
+            await _userRepository.AddAsync(newUser);
+
+            // Map new user to UserResponseDto
+            var userResponseDto = new UserResponseDto
+            {
+                Id = newUser.Id,
+                UserName = newUser.UserName,
+                Email = newUser.Email,
+                CreatedAt = newUser.CreatedAt
+            };
+
+            // Validate if userResponseDto is null
+            if (userResponseDto == null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Failed to create user");
+            }
+
+            // Return success response
+            return ApiResponse<UserResponseDto>.SuccessResponse(userResponseDto, "User created successfully");
         }
 
 
