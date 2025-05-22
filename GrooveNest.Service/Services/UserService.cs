@@ -37,9 +37,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // ------------------------------------------------------------------------- //
+        // ---------------------------------------------------------------------------------- //
         // ------------------------ GetAllPaginatedUsersAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------- // 
+        // ---------------------------------------------------------------------------------- // 
         public async Task<ApiResponse<object>> GetAllPaginatedUsersAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
             var users = await _userRepository.GetAllAsync();
@@ -84,6 +84,38 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ GetAllUsersAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<UserResponseDto>> GetUserByIdAsync(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            // Validate if user is null
+            if (user == null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("User not found");
+            }
+            // Map user to UserResponseDto
+            var userResponseDto = new UserResponseDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            };
+            // Return success response
+            return ApiResponse<UserResponseDto>.SuccessResponse(userResponseDto, "User retrieved successfully");
+        }
+
+
+
+
+
+
+
+
+
+
 
         public Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
@@ -91,13 +123,6 @@ namespace GrooveNest.Service.Services
         }
 
         public Task<ApiResponse<string>> DeleteUserAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        public Task<ApiResponse<UserResponseDto>> GetUserByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
