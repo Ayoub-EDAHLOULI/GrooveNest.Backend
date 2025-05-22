@@ -6,7 +6,7 @@ namespace GrooveNest.Repository.Repositories
 {
     public class GenericRepository<T, TKey>(AppDbContext context) : IGenericRepository<T, TKey> where T : class
     {
-        private readonly AppDbContext _context = context;
+        protected readonly AppDbContext _context = context;
         private readonly DbSet<T> _dbSet = context.Set<T>();
 
         public async Task<IEnumerable<T>> GetAllAsync()
