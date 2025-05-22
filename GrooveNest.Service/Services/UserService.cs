@@ -111,9 +111,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // ------------------------------------------------------------------------- //
-        // ------------------------ GetUserByIdAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------- // 
+        // ------------------------------------------------------------------------ //
+        // ------------------------ CreateUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
 
         public async Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
@@ -174,18 +174,91 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------ //
+        // ------------------------ UpdateUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+        public async Task<ApiResponse<UserResponseDto>> UpdateUserAsync(Guid id, UserUpdateDto userUpdateDto)
+        {
+            // Check if user exists
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("User not found");
+            }
 
+            // Update only provided fields
+            if (!string.IsNullOrEmpty(userUpdateDto.UserName))
+            {
+                // Trim whitespace from username
+                var trimmedUserName = StringValidator.TrimOrEmpty(userUpdateDto.UserName);
 
+                // Check if username already exists
+                var existingUserName = await _userRepository.GetByUserNameAsync(trimmedUserName);
+                if (existingUserName != null)
+                {
+                    return ApiResponse<UserResponseDto>.ErrorResponse("Username already exists");
+                }
+                user.UserName = trimmedUserName;
+            }
 
+            if (!string.IsNullOrEmpty(userUpdateDto.Email))
+            {
+                // Trim whitespace from email
+                var trimmedEmail = StringValidator.TrimOrEmpty(userUpdateDto.Email);
+
+                // Check if email already exists
+                var existingUserEmail = await _userRepository.GetByEmailAsync(trimmedEmail);
+                if (existingUserEmail != null)
+                {
+                    return ApiResponse<UserResponseDto>.ErrorResponse("Email already exists");
+                }
+
+                // Validate if email is valid
+                if (!IsValidEmail.IsValid(trimmedEmail))
+                {
+                    return ApiResponse<UserResponseDto>.ErrorResponse("Email is not valid");
+                }
+
+                user.Email = trimmedEmail;
+            }
+
+            if (!string.IsNullOrEmpty(userUpdateDto.Password))
+            {
+                // Trim whitespace from password
+                var trimmedPassword = StringValidator.TrimOrEmpty(userUpdateDto.Password);
+                // Validate if password is valid
+                if (trimmedPassword.Length < 6)
+                {
+                    return ApiResponse<UserResponseDto>.ErrorResponse("Password must be at least 6 characters long");
+                }
+                user.Password = HashPassword(trimmedPassword);
+            }
+
+            // Update user in the database
+            await _userRepository.UpdateAsync(user);
+
+            // Map updated user to UserResponseDto
+            var userResponseDto = new UserResponseDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            };
+
+            // Validate if userResponseDto is null
+            if (userResponseDto == null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Failed to update user");
+            }
+
+            // Return success response
+            return ApiResponse<UserResponseDto>.SuccessResponse(userResponseDto, "User updated successfully");
+        }
 
 
 
         public Task<ApiResponse<string>> DeleteUserAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<UserResponseDto>> UpdateUserAsync(Guid id, UserUpdateDto userUpdateDto)
         {
             throw new NotImplementedException();
         }
