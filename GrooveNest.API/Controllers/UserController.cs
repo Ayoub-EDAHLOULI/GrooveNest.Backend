@@ -73,5 +73,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ UpdateUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UserUpdateDto userUpdateDto)
+        {
+            var response = await _userService.UpdateUserAsync(id, userUpdateDto);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
