@@ -16,7 +16,7 @@ namespace GrooveNest.Domain.Validators
 
             foreach (var field in requiredFields)
             {
-                if (string.IsNullOrEmpty(field.Value))
+                if (StringValidator.IsNullOrWhiteSpace(field.Value))
                 {
                     return ApiResponse<UserResponseDto>.ErrorResponse($"{field.Key} is required.");
                 }
@@ -30,6 +30,11 @@ namespace GrooveNest.Domain.Validators
             if (userCreateDto.Password.Length < 6)
             {
                 return ApiResponse<UserResponseDto>.ErrorResponse("Password must be at least 6 characters long.");
+            }
+
+            if (!IsValidEmail.IsValid(userCreateDto.Email))
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Email is not valid.");
             }
 
             return null;
