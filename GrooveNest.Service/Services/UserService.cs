@@ -9,6 +9,36 @@ namespace GrooveNest.Service.Services
     {
         private readonly IUserRepository _userRepository = userRepository;
 
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ GetAllUsersAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        public async Task<ApiResponse<List<UserResponseDto>>> GetAllUsersAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            // Validate if users is null or empty
+            if (users == null || !users.Any())
+            {
+                return ApiResponse<List<UserResponseDto>>.ErrorResponse("No users found");
+            }
+
+            // Map users to UserResponseDto
+            var userResponseDtos = users.Select(user => new UserResponseDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            }).ToList();
+
+            // Return success response
+            return ApiResponse<List<UserResponseDto>>.SuccessResponse(userResponseDtos, "Users retrieved successfully");
+        }
+
+
+
         public Task<ApiResponse<UserResponseDto>> CreateUserAsync(UserCreateDto userCreateDto)
         {
             throw new NotImplementedException();
@@ -20,11 +50,6 @@ namespace GrooveNest.Service.Services
         }
 
         public Task<ApiResponse<object>> GetAllPaginatedUsersAsync(int page = 1, int pageSize = 10, string searchQuery = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<List<UserResponseDto>>> GetAllUsersAsync()
         {
             throw new NotImplementedException();
         }
