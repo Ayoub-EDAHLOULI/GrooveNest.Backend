@@ -1,4 +1,6 @@
 using GrooveNest.Repository.Data;
+using GrooveNest.Repository.Interfaces;
+using GrooveNest.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// Register repositories and services
+builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
 
 var app = builder.Build();
 
