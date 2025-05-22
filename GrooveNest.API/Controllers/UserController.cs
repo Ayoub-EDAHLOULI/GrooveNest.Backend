@@ -1,4 +1,5 @@
-﻿using GrooveNest.Service.Services;
+﻿using GrooveNest.Domain.DTOs.UserDTOs;
+using GrooveNest.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
@@ -53,6 +54,22 @@ namespace GrooveNest.API.Controllers
             if (!response.Success)
             {
                 return NotFound(response);
+            }
+            return Ok(response);
+        }
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ CreateUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUserAsync([FromBody] UserCreateDto userCreateDto)
+        {
+            var response = await _userService.CreateUserAsync(userCreateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
             }
             return Ok(response);
         }
