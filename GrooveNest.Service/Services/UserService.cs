@@ -257,10 +257,27 @@ namespace GrooveNest.Service.Services
         }
 
 
-
-        public Task<ApiResponse<string>> DeleteUserAsync(Guid id)
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteUserAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+        public async Task<ApiResponse<string>> DeleteUserAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Check if user exists
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return ApiResponse<string>.ErrorResponse("User not found");
+            }
+            // Delete user from the database
+            await _userRepository.DeleteAsync(user);
+            // Validate if user is deleted
+            var deletedUser = await _userRepository.GetByIdAsync(id);
+            if (deletedUser != null)
+            {
+                return ApiResponse<string>.ErrorResponse("Failed to delete user");
+            }
+            // Return success response
+            return ApiResponse<string>.SuccessResponse("User deleted successfully");
         }
     }
 }
