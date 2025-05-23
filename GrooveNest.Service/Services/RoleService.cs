@@ -82,6 +82,31 @@ namespace GrooveNest.Service.Services
         }
 
 
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetRolesByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<RoleResponseDto>> GetRoleByIdAsync(int id)
+        {
+            // Get the role by ID
+            var role = await _roleRepository.GetByIdAsync(id);
+            // Check if the role is null
+            if (role == null)
+            {
+                return ApiResponse<RoleResponseDto>.ErrorResponse("Role not found.");
+            }
+            // Map the role to RoleResponseDto
+            var roleResponseDto = new RoleResponseDto
+            {
+                Id = role.Id,
+                Name = role.Name
+            };
+            // Return the response
+            return ApiResponse<RoleResponseDto>.SuccessResponse(roleResponseDto, "Role retrieved successfully.");
+        }
+
+
+
         public Task<ApiResponse<RoleResponseDto>> CreateRoleAsync(RoleCreateDto roleCreateDto)
         {
             throw new NotImplementedException();
@@ -92,10 +117,7 @@ namespace GrooveNest.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<RoleResponseDto>> GetRoleByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<ApiResponse<RoleResponseDto>> UpdateRoleAsync(int id, RoleUpdateDto roleUpdateDto)
         {
