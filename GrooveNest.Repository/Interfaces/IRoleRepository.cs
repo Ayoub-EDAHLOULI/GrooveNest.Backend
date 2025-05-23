@@ -2,7 +2,7 @@
 
 namespace GrooveNest.Repository.Interfaces
 {
-    public interface IRole : IGenericRepository<Role, int>
+    public interface IRoleRepository : IGenericRepository<Role, int>
     {
         /// <summary>
         /// Get a role by its name.
