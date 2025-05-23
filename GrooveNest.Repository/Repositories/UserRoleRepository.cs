@@ -12,8 +12,12 @@ namespace GrooveNest.Repository.Repositories
 
         public async Task<IEnumerable<UserRole>> GetAllAsync()
         {
-            return await _context.UserRoles.ToListAsync();
+            return await _context.UserRoles
+                .Include(ur => ur.User)
+                .Include(ur => ur.Role)
+                .ToListAsync();
         }
+
         public async Task AddAsync(UserRole entity)
         {
             await _context.UserRoles.AddAsync(entity);
@@ -29,8 +33,11 @@ namespace GrooveNest.Repository.Repositories
         public async Task<UserRole?> GetByIdsAsync(Guid userId, int roleId)
         {
             return await _context.UserRoles
+                .Include(ur => ur.User)
+                .Include(ur => ur.Role)
                 .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId);
         }
+
 
         public async Task<List<Role>> GetRolesByUserIdAsync(Guid userId)
         {
