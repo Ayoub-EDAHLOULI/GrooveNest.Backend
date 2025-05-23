@@ -1,4 +1,5 @@
-﻿using GrooveNest.Service.Services;
+﻿using GrooveNest.Domain.DTOs.RoleDTOs;
+using GrooveNest.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
@@ -50,6 +51,22 @@ namespace GrooveNest.API.Controllers
         public async Task<IActionResult> GetRolesByIdAsync(int id)
         {
             var response = await _roleService.GetRoleByIdAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ CreateRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRoleAsync([FromBody] RoleCreateDto roleCreateDto)
+        {
+            var response = await _roleService.CreateRoleAsync(roleCreateDto);
             if (!response.Success)
             {
                 return BadRequest(response);
