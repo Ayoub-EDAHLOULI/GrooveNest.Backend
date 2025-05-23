@@ -182,11 +182,28 @@ namespace GrooveNest.Service.Services
         }
 
 
-
-
-        public Task<ApiResponse<string>> DeleteRoleAsync(int id)
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ //
+        public async Task<ApiResponse<string>> DeleteRoleAsync(int id)
         {
-            throw new NotImplementedException();
+            // Get the existing role by ID
+            var existingRole = await _roleRepository.GetByIdAsync(id);
+            // Check if the role exists
+            if (existingRole == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Role not found.");
+            }
+            // Delete the role from the database
+            await _roleRepository.DeleteAsync(existingRole);
+            // Check if the role was deleted successfully
+            var deletedRole = await _roleRepository.GetByIdAsync(id);
+            if (deletedRole != null)
+            {
+                return ApiResponse<string>.ErrorResponse("Failed to delete the role.");
+            }
+            // Return the response
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Role deleted successfully.");
         }
     }
 }
