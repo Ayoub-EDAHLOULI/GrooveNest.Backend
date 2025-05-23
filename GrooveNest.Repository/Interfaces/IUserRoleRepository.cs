@@ -2,10 +2,14 @@
 
 namespace GrooveNest.Repository.Interfaces
 {
-    public interface IUserRoleRepository : IGenericRepository<UserRole, Guid>
+    public interface IUserRoleRepository
     {
+        Task<IEnumerable<UserRole>> GetAllAsync();
         Task<UserRole?> GetByIdsAsync(Guid userId, int roleId);
-        Task<IEnumerable<Role>> GetRolesByUserIdAsync(Guid userId);
-        Task<IEnumerable<User>> GetUsersByRoleIdAsync(int roleId);
+        Task AddAsync(UserRole entity);
+        Task DeleteAsync(UserRole entity);
+
+        Task<List<Role>> GetRolesByUserIdAsync(Guid userId);
+        Task<List<User>> GetUsersByRoleIdAsync(int roleId);
     }
 }
