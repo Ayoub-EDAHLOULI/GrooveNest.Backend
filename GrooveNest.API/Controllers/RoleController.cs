@@ -74,5 +74,21 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ UpdateRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ //
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRoleAsync(int id, [FromBody] RoleUpdateDto roleUpdateDto)
+        {
+            var response = await _roleService.UpdateRoleAsync(id, roleUpdateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
     }
 }
