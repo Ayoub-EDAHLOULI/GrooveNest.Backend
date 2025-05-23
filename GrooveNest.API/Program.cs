@@ -24,15 +24,19 @@ builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericReposito
 
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<RoleRepository>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RoleService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 
 
