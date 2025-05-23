@@ -107,9 +107,37 @@ namespace GrooveNest.Service.Services
 
 
 
-        public Task<ApiResponse<RoleResponseDto>> CreateRoleAsync(RoleCreateDto roleCreateDto)
+        // ------------------------------------------------------------------------ //
+        // ------------------------ CreateRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+        public async Task<ApiResponse<RoleResponseDto>> CreateRoleAsync(RoleCreateDto roleCreateDto)
         {
-            throw new NotImplementedException();
+            // Check if the role name is empty
+            if (string.IsNullOrEmpty(roleCreateDto.Name))
+            {
+                return ApiResponse<RoleResponseDto>.ErrorResponse("Role name cannot be empty.");
+            }
+            // Check if the role already exists
+            var existingRole = await _roleRepository.GetByNameAsync(StringValidator.TrimOrEmpty(roleCreateDto.Name));
+            if (existingRole != null)
+            {
+                return ApiResponse<RoleResponseDto>.ErrorResponse("Role already exists.");
+            }
+            // Create a new role entity
+            var newRole = new Role
+            {
+                Name = StringValidator.TrimOrEmpty(roleCreateDto.Name)
+            };
+            // Save the new role to the database
+            await _roleRepository.AddAsync(newRole);
+            // Map the new role to RoleResponseDto
+            var roleResponseDto = new RoleResponseDto
+            {
+                Id = newRole.Id,
+                Name = newRole.Name
+            };
+            // Return the response
+            return ApiResponse<RoleResponseDto>.SuccessResponse(roleResponseDto, "Role created successfully.");
         }
 
         public Task<ApiResponse<string>> DeleteRoleAsync(int id)
