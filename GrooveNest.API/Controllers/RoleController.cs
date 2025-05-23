@@ -90,5 +90,20 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ //
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRoleAsync(int id)
+        {
+            var response = await _roleService.DeleteRoleAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
