@@ -140,14 +140,51 @@ namespace GrooveNest.Service.Services
             return ApiResponse<RoleResponseDto>.SuccessResponse(roleResponseDto, "Role created successfully.");
         }
 
-        public Task<ApiResponse<string>> DeleteRoleAsync(int id)
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ UpdateRoleAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ //
+        public async Task<ApiResponse<RoleResponseDto>> UpdateRoleAsync(int id, RoleUpdateDto roleUpdateDto)
         {
-            throw new NotImplementedException();
+            // Get the existing role by ID
+            var existingRole = await _roleRepository.GetByIdAsync(id);
+            // Check if the role exists
+            if (existingRole == null)
+            {
+                return ApiResponse<RoleResponseDto>.ErrorResponse("Role not found.");
+            }
+
+            // Update name if provided
+            if (!string.IsNullOrEmpty(roleUpdateDto.Name))
+            {
+                // Check if the role name already exists
+                var existingRoleWithName = await _roleRepository.GetByNameAsync(StringValidator.TrimOrEmpty(roleUpdateDto.Name));
+                if (existingRoleWithName != null && existingRoleWithName.Id != id)
+                {
+                    return ApiResponse<RoleResponseDto>.ErrorResponse("Role name already exists.");
+                }
+
+                // Update the role name
+                existingRole.Name = StringValidator.TrimOrEmpty(roleUpdateDto.Name);
+            }
+
+            // Save the changes to the database
+            await _roleRepository.UpdateAsync(existingRole);
+            // Map the updated role to RoleResponseDto
+            var roleResponseDto = new RoleResponseDto
+            {
+                Id = existingRole.Id,
+                Name = existingRole.Name
+            };
+            // Return the response
+            return ApiResponse<RoleResponseDto>.SuccessResponse(roleResponseDto, "Role updated successfully.");
         }
 
 
 
-        public Task<ApiResponse<RoleResponseDto>> UpdateRoleAsync(int id, RoleUpdateDto roleUpdateDto)
+
+        public Task<ApiResponse<string>> DeleteRoleAsync(int id)
         {
             throw new NotImplementedException();
         }
