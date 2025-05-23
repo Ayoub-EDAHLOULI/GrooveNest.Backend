@@ -41,5 +41,21 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetRolesByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRolesByIdAsync(int id)
+        {
+            var response = await _roleService.GetRoleByIdAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
     }
 }
