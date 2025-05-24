@@ -1,5 +1,6 @@
 ﻿using GrooveNest.Domain.DTOs.ArtistApplicationDTOs;
 using GrooveNest.Domain.DTOs.UserDTOs;
+using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
@@ -137,10 +138,46 @@ namespace GrooveNest.Service.Services
         }
 
 
-
-        public Task<ApiResponse<ArtistApplicationResponseDto>> CreateArtistApplicationAsync(ArtistApplicationCreateDto artistApplicationCreateDto)
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ CreateArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<ArtistApplicationResponseDto>> CreateArtistApplicationAsync(ArtistApplicationCreateDto artistApplicationCreateDto)
         {
-            throw new NotImplementedException();
+
+            // Validate the input DTO
+            if (artistApplicationCreateDto == null || artistApplicationCreateDto.UserId == Guid.Empty)
+            {
+                return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Invalid artist application data.");
+            }
+
+            // Check if the user exists
+            var userResponse = await _userService.GetUserByIdAsync(artistApplicationCreateDto.UserId);
+            if (userResponse.Data == null)
+            {
+                return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("User not found.");
+            }
+            // Create the artist application
+            var artistApplication = new ArtistApplication
+            {
+                UserId = artistApplicationCreateDto.UserId,
+                Message = StringValidator.TrimOrEmpty(artistApplicationCreateDto.Message),
+                SubmittedAt = DateTime.UtcNow,
+                IsApproved = false // Default to false until approved
+            };
+            await _artistApplicationRepository.AddAsync(artistApplication);
+
+            // Create the response DTO
+            var artistApplicationResponseDto = new ArtistApplicationResponseDto
+            {
+                Id = artistApplication.Id,
+                UserId = artistApplication.UserId,
+                UserName = userResponse.Data.UserName,
+                Message = artistApplication.Message,
+                SubmittedAt = artistApplication.SubmittedAt,
+                IsApproved = artistApplication.IsApproved
+            };
+
+            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationResponseDto, "Artist application created successfully.");
         }
 
         public Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
