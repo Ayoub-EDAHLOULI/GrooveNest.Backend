@@ -41,5 +41,24 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetUserRoleByIdAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- //
+
+        [HttpGet("{userId}/{roleId}")]
+        public async Task<IActionResult> GetUserRoleByIdAsync(Guid userId, int roleId)
+        {
+            var response = await _userRoleService.GetUserRoleByIdAsync(userId, roleId);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
+
+
+
     }
 }
