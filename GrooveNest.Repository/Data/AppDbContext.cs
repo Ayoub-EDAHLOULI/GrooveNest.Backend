@@ -18,6 +18,7 @@ namespace GrooveNest.Repository.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<ArtistApplication> ArtistApplications { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +38,7 @@ namespace GrooveNest.Repository.Data
             var likeEntity = modelBuilder.Entity<Like>();
             var roleEntity = modelBuilder.Entity<Role>();
             var ratingEntity = modelBuilder.Entity<Rating>();
+
 
 
             // -------------------------------------------------- //
