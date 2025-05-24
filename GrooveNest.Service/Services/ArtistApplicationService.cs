@@ -211,10 +211,20 @@ namespace GrooveNest.Service.Services
         }
 
 
-
-        public Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ UpdateArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Get the existing artist application
+            var artistApplication = await _artistApplicationRepository.GetByIdAsync(id);
+            if (artistApplication == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Artist application not found.");
+            }
+            // Delete the artist application
+            await _artistApplicationRepository.DeleteAsync(artistApplication);
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Artist application deleted successfully.");
         }
     }
 }
