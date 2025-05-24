@@ -1,3 +1,4 @@
+using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Data;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Repository.Repositories;
@@ -36,11 +37,13 @@ builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<UserRoleService>();
+builder.Services.AddScoped<ArtistApplicationService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IArtistApplicationService, ArtistApplicationService>();
 
 
 

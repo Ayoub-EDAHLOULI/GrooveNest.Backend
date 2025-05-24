@@ -1,5 +1,4 @@
 ﻿using GrooveNest.Domain.DTOs.ArtistApplicationDTOs;
-using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
