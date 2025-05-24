@@ -1,4 +1,5 @@
-﻿using GrooveNest.Service.Services;
+﻿using GrooveNest.Domain.DTOs.ArtistApplicationDTOs;
+using GrooveNest.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
@@ -47,9 +48,25 @@ namespace GrooveNest.API.Controllers
         // -------------------------------------------------------------------------------------- //
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetArtistApplicationByIdAsync(int id)
+        public async Task<IActionResult> GetArtistApplicationByIdAsync(Guid id)
         {
             var response = await _artistApplicationService.GetArtistApplicationByIdAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ CreateArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreateArtistApplicationAsync([FromBody] ArtistApplicationCreateDto artistApplicationCreateDto)
+        {
+            var response = await _artistApplicationService.CreateArtistApplicationAsync(artistApplicationCreateDto);
             if (!response.Success)
             {
                 return BadRequest(response);
