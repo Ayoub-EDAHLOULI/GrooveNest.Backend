@@ -32,9 +32,9 @@ namespace GrooveNest.API.Controllers
         // ---------------------------------------------------------------------------------- // 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPaginatedRolesAsync(int page = 1, int pageSize = 10, string searchQuery = "")
+        public async Task<IActionResult> GetAllPaginatedRolesAsync(int page = 1, int pageSize = 10, string search = "")
         {
-            var response = await _roleService.GetAllPaginatedRolesAsync(page, pageSize, searchQuery);
+            var response = await _roleService.GetAllPaginatedRolesAsync(page, pageSize, search);
             if (!response.Success)
             {
                 return BadRequest(response);
