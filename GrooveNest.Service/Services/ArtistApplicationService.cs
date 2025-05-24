@@ -180,12 +180,39 @@ namespace GrooveNest.Service.Services
             return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationResponseDto, "Artist application created successfully.");
         }
 
-        public Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
+
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ UpdateArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<ArtistApplicationResponseDto>> UpdateArtistApplicationAsync(Guid id, ArtistApplicationApprovalDto artistApplicationApprovalDto)
         {
-            throw new NotImplementedException();
+            // Get the existing artist application
+            var artistApplication = await _artistApplicationRepository.GetByIdAsync(id);
+            if (artistApplication == null)
+            {
+                return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Artist application not found.");
+            }
+            // Update the approval status
+            artistApplication.IsApproved = artistApplicationApprovalDto.Approve;
+            await _artistApplicationRepository.UpdateAsync(artistApplication);
+            // Create the response DTO
+            var user = await _userService.GetUserByIdAsync(artistApplication.UserId);
+            var userName = user.Data?.UserName ?? "Unknown User";
+            var artistApplicationResponseDto = new ArtistApplicationResponseDto
+            {
+                Id = artistApplication.Id,
+                UserId = artistApplication.UserId,
+                UserName = userName,
+                Message = artistApplication.Message,
+                SubmittedAt = artistApplication.SubmittedAt,
+                IsApproved = artistApplication.IsApproved
+            };
+            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationResponseDto, "Artist application updated successfully.");
         }
 
-        public Task<ApiResponse<ArtistApplicationResponseDto>> UpdateArtistApplicationAsync(Guid id, ArtistApplicationApprovalDto artistApplicationApprovalDto)
+
+
+        public Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
         {
             throw new NotImplementedException();
         }
