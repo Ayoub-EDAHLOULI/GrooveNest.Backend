@@ -112,17 +112,38 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ GetArtistApplicationByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<ArtistApplicationResponseDto>> GetArtistApplicationByIdAsync(Guid id)
+        {
+            var artistApplication = await _artistApplicationRepository.GetByIdAsync(id);
+            if (artistApplication == null)
+            {
+                return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Artist application not found.");
+            }
+            var user = await _userService.GetUserByIdAsync(artistApplication.UserId);
+            var userName = user.Data?.UserName ?? "Unknown User";
+            var artistApplicationDto = new ArtistApplicationResponseDto
+            {
+                Id = artistApplication.Id,
+                UserId = artistApplication.UserId,
+                UserName = userName,
+                Message = artistApplication.Message,
+                SubmittedAt = artistApplication.SubmittedAt,
+                IsApproved = artistApplication.IsApproved
+            };
+            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationDto, "Artist application retrieved successfully.");
+        }
+
+
+
         public Task<ApiResponse<ArtistApplicationResponseDto>> CreateArtistApplicationAsync(ArtistApplicationCreateDto artistApplicationCreateDto)
         {
             throw new NotImplementedException();
         }
 
         public Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<ArtistApplicationResponseDto>> GetArtistApplicationByIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
