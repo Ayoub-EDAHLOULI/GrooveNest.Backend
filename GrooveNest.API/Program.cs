@@ -46,6 +46,15 @@ builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 var app = builder.Build();
 
+
+// Seed roles at application startup
+using (var scope = app.Services.CreateScope())
+{
+    var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
+    await roleService.SeedRolesAsync();
+}
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
