@@ -11,6 +11,32 @@ namespace GrooveNest.Service.Services
         private readonly IRoleRepository _roleRepository = roleRepository;
 
 
+        // --------------------------------------------------------------------- //
+        // ------------------------ Role Seeding METHODS ----------------------- //
+        // --------------------------------------------------------------------- //
+        public async Task SeedRolesAsync()
+        {
+            // Check if roles already exist
+            var existingRoles = await _roleRepository.GetAllAsync();
+            if (existingRoles != null && existingRoles.Any())
+            {
+                return; // Roles already seeded
+            }
+            // Define default roles
+            var defaultRoles = new List<Role>
+            {
+                new() { Name = "Admin" },
+                new() { Name = "Artist" },
+                new() { Name = "Listener" }
+            };
+            // Add default roles to the repository
+            foreach (var role in defaultRoles)
+            {
+                await _roleRepository.AddAsync(role);
+            }
+        }
+
+
         // ------------------------------------------------------------------------- //
         // ------------------------ GetAllRolesAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
