@@ -8,9 +8,11 @@ using static BCrypt.Net.BCrypt;
 
 namespace GrooveNest.Service.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(IUserRepository userRepository, IRoleRepository roleRepository, IUserRoleRepository userRoleRepository) : IUserService
     {
         private readonly IUserRepository _userRepository = userRepository;
+        private readonly IRoleRepository _roleRepository = roleRepository;
+        private readonly IUserRoleRepository _userRoleRepository = userRoleRepository;
 
 
         // ------------------------------------------------------------------------- //
@@ -153,6 +155,25 @@ namespace GrooveNest.Service.Services
 
             // Save new user to the database
             await _userRepository.AddAsync(newUser);
+
+            // Get the 'listener' role
+            var role = await _roleRepository.GetByNameAsync("listener");
+
+            // Check if the role exists
+            if (role == null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Default role 'listener' not found");
+            }
+
+            // Assign the 'listener' role to the new user
+            var userRole = new UserRole
+            {
+                UserId = newUser.Id,
+                RoleId = role.Id
+            };
+
+            // Save the user role to the database
+            await _userRoleRepository.AddAsync(userRole);
 
             // Map new user to UserResponseDto
             var userResponseDto = new UserResponseDto

@@ -9,7 +9,7 @@ namespace GrooveNest.Repository.Repositories
     {
         public Task<Role?> GetByNameAsync(string name)
         {
-            return _context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+            return _context.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
         }
     }
 }
