@@ -89,5 +89,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ DeleteArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteArtistApplicationAsync(Guid id)
+        {
+            var response = await _artistApplicationService.DeleteArtistApplicationAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

@@ -211,7 +211,7 @@ namespace GrooveNest.Service.Services
 
 
         // -------------------------------------------------------------------------------------- //
-        // ------------------------ UpdateArtistApplicationAsync METHODS ------------------------ //
+        // ------------------------ DeleteArtistApplicationAsync METHODS ------------------------ //
         // -------------------------------------------------------------------------------------- //
         public async Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id)
         {
