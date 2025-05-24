@@ -6,6 +6,7 @@ namespace GrooveNest.Repository.Interfaces
     {
         Task<IEnumerable<UserRole>> GetAllAsync();
         Task<UserRole?> GetByIdsAsync(Guid userId, int roleId);
+        Task<UserRole?> GetByIdAsync(Guid userId);
         Task AddAsync(UserRole entity);
         Task DeleteAsync(UserRole entity);
 

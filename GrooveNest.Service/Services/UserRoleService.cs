@@ -85,10 +85,10 @@ namespace GrooveNest.Service.Services
         // ----------------------------------------------------------------------------- //
         // ------------------------ GetUserRoleByIdAsync METHODS ----------------------- //
         // ----------------------------------------------------------------------------- //
-        public async Task<ApiResponse<UserRoleResponseDto>> GetUserRoleByIdAsync(Guid userId, int roleId)
+        public async Task<ApiResponse<UserRoleResponseDto>> GetUserRoleByIdAsync(Guid userId)
         {
             // Check if user role exists
-            var userRole = await _userRoleRepository.GetByIdsAsync(userId, roleId);
+            var userRole = await _userRoleRepository.GetByIdAsync(userId);
             if (userRole == null)
             {
                 return ApiResponse<UserRoleResponseDto>.ErrorResponse("User role not found.");

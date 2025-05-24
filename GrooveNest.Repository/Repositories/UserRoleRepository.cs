@@ -54,5 +54,13 @@ namespace GrooveNest.Repository.Repositories
                 .Select(ur => ur.User)
                 .ToListAsync();
         }
+
+        public async Task<UserRole?> GetByIdAsync(Guid userId)
+        {
+            return await _context.UserRoles
+                .Include(ur => ur.User)
+                .Include(ur => ur.Role)
+                .FirstOrDefaultAsync(ur => ur.UserId == userId);
+        }
     }
 }
