@@ -59,6 +59,19 @@ namespace GrooveNest.API.Controllers
         }
 
 
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ DeleteUserRoleAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
 
+        [HttpDelete("{userId}/{roleId}")]
+        public async Task<IActionResult> DeleteUserRoleAsync(Guid userId, int roleId)
+        {
+            var response = await _userRoleService.DeleteUserRoleAsync(userId, roleId);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
