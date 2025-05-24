@@ -2,7 +2,7 @@
 
 namespace GrooveNest.Repository.Interfaces
 {
-    public interface IArtistApplication : IGenericRepository<ArtistApplication, Guid>
+    public interface IArtistApplicationRepository : IGenericRepository<ArtistApplication, Guid>
     {
     }
 }
