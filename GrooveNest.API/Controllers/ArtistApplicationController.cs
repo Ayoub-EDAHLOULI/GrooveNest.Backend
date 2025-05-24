@@ -73,5 +73,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ UpdateArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------- //
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateArtistApplicationAsync(Guid id, [FromBody] ArtistApplicationApprovalDto artistApplicationApprovalDto)
+        {
+            var response = await _artistApplicationService.UpdateArtistApplicationAsync(id, artistApplicationApprovalDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
