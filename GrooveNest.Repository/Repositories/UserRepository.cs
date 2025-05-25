@@ -15,5 +15,13 @@ namespace GrooveNest.Repository.Repositories
         {
             return _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
+
+        public async Task<User?> GetUserNameByIdAsync(Guid id)
+        {
+            return await _context.Users
+                .Where(u => u.Id == id)
+                .Select(u => new User { UserName = u.UserName })
+                .FirstOrDefaultAsync();
+        }
     }
 }

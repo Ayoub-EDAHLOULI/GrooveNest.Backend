@@ -6,5 +6,6 @@ namespace GrooveNest.Repository.Interfaces
     {
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByUserNameAsync(string userName);
+        Task<User?> GetUserNameByIdAsync(Guid id);
     }
 }
