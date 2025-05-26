@@ -1,13 +1,16 @@
 ﻿using GrooveNest.Domain.DTOs.PlaylistDTOs;
+using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
+using GrooveNest.Repository.Repositories;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
 
 namespace GrooveNest.Service.Services
 {
-    public class PlaylistService(IPlaylistRepository playlistRepository) : IPlaylistService
+    public class PlaylistService(IPlaylistRepository playlistRepository, IUserRepository userRepository) : IPlaylistService
     {
         private readonly IPlaylistRepository _playlistRepository = playlistRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
 
         // ------------------------------------------------------------------------- //
@@ -101,13 +104,56 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // ----------------------------------------------------------------------------- //
-        // ------------------------ GetPlaylistByIdAsync METHODS ----------------------- //
-        // ----------------------------------------------------------------------------- //
-
-        public Task<ApiResponse<PlaylistResponseDto>> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto)
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ CreatePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
+        public async Task<ApiResponse<PlaylistResponseDto>> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto)
         {
-            throw new NotImplementedException();
+            // Validate the input
+            if (string.IsNullOrWhiteSpace(playlistCreateDto.Name) || playlistCreateDto.Name.Trim().Length < 3)
+            {
+                return ApiResponse<PlaylistResponseDto>.ErrorResponse("Playlist name must be at least 3 characters long.");
+            }
+
+            // Check if a playlist with the same name already exists
+            var existingPlaylist = await _playlistRepository.GetPlaylistByName(playlistCreateDto.Name);
+            if (existingPlaylist != null)
+            {
+                return ApiResponse<PlaylistResponseDto>.ErrorResponse("A playlist with this name already exists.");
+            }
+
+            // Check if owner exists
+            var owner = await _userRepository.GetByIdAsync(playlistCreateDto.OwnerId);
+            if (owner == null)
+            {
+                return ApiResponse<PlaylistResponseDto>.ErrorResponse("Playlist owner not found.");
+            }
+
+            // Create a new playlist entity
+            var newPlaylist = new Domain.Entities.Playlist
+            {
+                Id = Guid.NewGuid(),
+                Name = StringValidator.TrimOrEmpty(playlistCreateDto.Name),
+                IsPublic = playlistCreateDto.IsPublic,
+                CreatedAt = DateTime.UtcNow,
+                OwnerId = playlistCreateDto.OwnerId
+            };
+
+            // Save the new playlist to the repository
+            await _playlistRepository.AddAsync(newPlaylist);
+
+            // Prepare response DTO
+            var playlistDto = new PlaylistResponseDto
+            {
+                Id = newPlaylist.Id,
+                Name = newPlaylist.Name,
+                IsPublic = newPlaylist.IsPublic,
+                CreatedAt = newPlaylist.CreatedAt,
+                OwnerId = newPlaylist.OwnerId,
+                OwnerUserName = owner.UserName
+            };
+
+            return ApiResponse<PlaylistResponseDto>.SuccessResponse(playlistDto, "Playlist created successfully.");
         }
 
         public Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
