@@ -9,6 +9,33 @@ namespace GrooveNest.Service.Services
     {
         private readonly IAlbumRepository _albumRepository = albumRepository;
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ GetAllAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<AlbumResponseDto>>> GetAllAlbumAsync()
+        {
+            var albums = await _albumRepository.GetAllAsync();
+            if (albums == null || !albums.Any())
+            {
+                return ApiResponse<List<AlbumResponseDto>>.ErrorResponse("No albums found.");
+            }
+
+            var albumDtos = albums.Select(album => new AlbumResponseDto
+            {
+                Id = album.Id,
+                Title = album.Title,
+                ReleaseDate = album.ReleaseDate,
+                CoverUrl = album.CoverUrl,
+                ArtistId = album.ArtistId,
+                ArtistName = album.Artist?.Name ?? "Unknown Artist"
+            }).ToList();
+
+            // Return response
+            return ApiResponse<List<AlbumResponseDto>>.SuccessResponse(albumDtos, "Albums retrieved successfully.");
+        }
+
+
+
         public Task<ApiResponse<AlbumResponseDto>> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
         {
             throw new NotImplementedException();
@@ -20,11 +47,6 @@ namespace GrooveNest.Service.Services
         }
 
         public Task<ApiResponse<AlbumResponseDto>> GetAlbumByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<AlbumResponseDto>> GetAllAlbumAsync()
         {
             throw new NotImplementedException();
         }
