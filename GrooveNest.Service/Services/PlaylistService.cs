@@ -1,7 +1,5 @@
 ﻿using GrooveNest.Domain.DTOs.PlaylistDTOs;
-using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
-using GrooveNest.Repository.Repositories;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
 
@@ -219,9 +217,17 @@ namespace GrooveNest.Service.Services
         // ---------------------------------------------------------------------------- //
         // ------------------------ DeletePlaylistAsync METHODS ----------------------- //
         // ---------------------------------------------------------------------------- //
-        public Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
+        public async Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Check if the playlist exists
+            var existingPlaylist = await _playlistRepository.GetByIdAsync(id);
+            if (existingPlaylist == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Playlist not found.");
+            }
+            // Delete the playlist from the repository
+            await _playlistRepository.DeleteAsync(existingPlaylist);
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Playlist deleted successfully.");
         }
     }
 }
