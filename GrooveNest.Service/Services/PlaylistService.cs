@@ -156,12 +156,70 @@ namespace GrooveNest.Service.Services
             return ApiResponse<PlaylistResponseDto>.SuccessResponse(playlistDto, "Playlist created successfully.");
         }
 
-        public Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
+
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ UpdatePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
+        public async Task<ApiResponse<PlaylistResponseDto>> UpdatePlaylistAsync(Guid id, PlaylistUpdateDto playlistUpdateDto)
         {
-            throw new NotImplementedException();
+            // Check if the playlist exists
+            var existingPlaylist = await _playlistRepository.GetByIdAsync(id);
+            if (existingPlaylist == null)
+            {
+                return ApiResponse<PlaylistResponseDto>.ErrorResponse("Playlist not found.");
+            }
+
+            // Update the name if provided
+            if (!string.IsNullOrWhiteSpace(playlistUpdateDto.Name))
+            {
+                // Trimmed name
+                var trimmedName = StringValidator.TrimOrEmpty(playlistUpdateDto.Name);
+
+                // Validate the name length
+                if (trimmedName.Length < 3)
+                {
+                    return ApiResponse<PlaylistResponseDto>.ErrorResponse("Playlist name must be at least 3 characters long.");
+                }
+
+                // Check if a playlist with the same name already exists
+                var existingNamePlaylist = await _playlistRepository.GetPlaylistByName(trimmedName);
+                if (existingNamePlaylist != null && existingNamePlaylist.Id != id)
+                {
+                    return ApiResponse<PlaylistResponseDto>.ErrorResponse("A playlist with this name already exists.");
+                }
+
+                // Update the name
+                existingPlaylist.Name = trimmedName;
+            }
+
+            // Update the IsPublic property if provided
+            if (playlistUpdateDto.IsPublic.HasValue)
+            {
+                existingPlaylist.IsPublic = playlistUpdateDto.IsPublic.Value;
+            }
+
+            // Save the updated playlist to the repository
+            await _playlistRepository.UpdateAsync(existingPlaylist);
+
+            // Prepare response DTO
+            var playlistDto = new PlaylistResponseDto
+            {
+                Id = existingPlaylist.Id,
+                Name = existingPlaylist.Name,
+                IsPublic = existingPlaylist.IsPublic,
+                CreatedAt = existingPlaylist.CreatedAt,
+                OwnerId = existingPlaylist.OwnerId,
+                OwnerUserName = existingPlaylist.Owner?.UserName ?? "Unknown User"
+            };
+
+            return ApiResponse<PlaylistResponseDto>.SuccessResponse(playlistDto, "Playlist updated successfully.");
         }
 
-        public Task<ApiResponse<PlaylistResponseDto>> UpdatePlaylistAsync(Guid id, PlaylistUpdateDto playlistUpdateDto)
+
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ DeletePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
+        public Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
         {
             throw new NotImplementedException();
         }
