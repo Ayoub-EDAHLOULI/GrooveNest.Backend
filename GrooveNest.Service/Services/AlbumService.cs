@@ -80,10 +80,17 @@ namespace GrooveNest.Service.Services
         }
 
 
-        public Task<ApiResponse<AlbumResponseDto>> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ CreateAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<AlbumResponseDto>> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
         {
-            throw new NotImplementedException();
+            // Validate the inputs
         }
+
+
+
 
         public Task<ApiResponse<string>> DeleteAlbumAsync(Guid id)
         {
