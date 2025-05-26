@@ -42,9 +42,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // -------------------------------------------------------------------------- //
-        // ------------------------ GetAllArtistAsync METHODS ----------------------- //
-        // -------------------------------------------------------------------------- // 
+        // ------------------------------------------------------------------------------------ //
+        // ------------------------ GetAllPaginatedArtistsAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------------ // 
         public async Task<ApiResponse<object>> GetAllPaginatedArtistsAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
             var artists = await _artistRepository.GetAllAsync();
@@ -87,9 +87,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // -------------------------------------------------------------------------- //
-        // ------------------------ GetAllArtistAsync METHODS ----------------------- //
-        // -------------------------------------------------------------------------- // 
+        // --------------------------------------------------------------------------- //
+        // ------------------------ GetArtistByIdAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
         public async Task<ApiResponse<ArtistResponseDto>> GetArtistByIdAsync(Guid id)
         {
             var artist = await _artistRepository.GetByIdAsync(id);
