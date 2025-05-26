@@ -290,6 +290,10 @@ namespace GrooveNest.Service.Services
         }
 
 
+
+        // ----------------------------------------------------------------------- //
+        // ------------------------ SaveCoverAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------- // 
         private static async Task<string?> SaveCoverAsync(IFormFile coverFile)
         {
             if (coverFile == null || coverFile.Length == 0)
