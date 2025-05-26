@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = null!;
-        public bool IsPublic { get; set; }
+        public bool IsPublic { get; set; } = true; // Default to public
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
