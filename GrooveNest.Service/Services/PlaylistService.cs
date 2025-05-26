@@ -35,6 +35,50 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ GetAllAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- //
+        public async Task<ApiResponse<object>> GetAllPaginatedPlaylistsAsync(int page = 1, int pageSize = 10, string searchQuery = "")
+        {
+            var playlists = await _playlistRepository.GetAllAsync();
+            if (playlists == null || !playlists.Any())
+            {
+                return ApiResponse<object>.ErrorResponse("No playlists found.");
+            }
+
+            // Filter playlists by search query
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                playlists = [.. playlists.Where(p => p.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))];
+            }
+
+            // Paginate playlists
+            var paginatedPlaylists = playlists
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(playlist => new PlaylistResponseDto
+                {
+                    Id = playlist.Id,
+                    Name = playlist.Name,
+                    IsPublic = playlist.IsPublic,
+                    CreatedAt = playlist.CreatedAt,
+                    OwnerId = playlist.OwnerId,
+                    OwnerUserName = playlist.Owner?.UserName ?? "Unknown User"
+                })
+                .ToList();
+
+            var totalPlaylists = playlists.Count();
+            var response = new
+            {
+                PaginatedPlaylists = paginatedPlaylists,
+                TotalPlaylists = totalPlaylists
+            };
+
+            return ApiResponse<object>.SuccessResponse(response, "Paginated playlists retrieved successfully.");
+        }
+
+
+
 
         public Task<ApiResponse<PlaylistResponseDto>> CreatePlaylistAsync(PlaylistCreateDto playlistCreateDto)
         {
@@ -42,11 +86,6 @@ namespace GrooveNest.Service.Services
         }
 
         public Task<ApiResponse<string>> DeletePlaylistAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<object>> GetAllPaginatedPlaylistsAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
             throw new NotImplementedException();
         }
