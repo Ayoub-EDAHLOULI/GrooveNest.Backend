@@ -1,13 +1,17 @@
 ﻿using GrooveNest.Domain.DTOs.AlbumDTOs;
+using GrooveNest.Domain.Entities;
+using GrooveNest.Domain.Validators;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
+using Microsoft.AspNetCore.Http;
 
 namespace GrooveNest.Service.Services
 {
-    public class AlbumService(IAlbumRepository albumRepository) : IAlbumService
+    public class AlbumService(IAlbumRepository albumRepository, IArtistRepository artistRepository) : IAlbumService
     {
         private readonly IAlbumRepository _albumRepository = albumRepository;
+        private readonly IArtistRepository _artistRepository = artistRepository;
 
         // ------------------------------------------------------------------------- //
         // ------------------------ GetAllAlbumAsync METHODS ----------------------- //
@@ -87,7 +91,62 @@ namespace GrooveNest.Service.Services
         public async Task<ApiResponse<AlbumResponseDto>> CreateAlbumAsync(AlbumCreateDto albumCreateDto)
         {
             // Validate the inputs
+            var validationResponse = AlbumValidator.ValidateCreate(albumCreateDto);
+            if (validationResponse != null)
+            {
+                return ApiResponse<AlbumResponseDto>.ErrorResponse(validationResponse.Message);
+            }
+
+            // Check if the artist exists
+            var artist = await _artistRepository.GetByIdAsync(albumCreateDto.ArtistId);
+            if (artist == null)
+            {
+                return ApiResponse<AlbumResponseDto>.ErrorResponse("Artist not found.");
+            }
+
+            // Validate and save cover file if provided
+            string? coverUrl = null;
+            if (albumCreateDto.Cover != null)
+            {
+                if (albumCreateDto.Cover.Length > 5 * 1024 * 1024)
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("Cover file size exceeds the limit of 5 MB.");
+                }
+
+                if (!albumCreateDto.Cover.ContentType.StartsWith("image/"))
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("Cover must be an image file.");
+                }
+
+                coverUrl = await SaveCoverAsync(albumCreateDto.Cover); // You must implement this method
+            }
+
+            // Create the Album entity
+            var album = new Album
+            {
+                Id = Guid.NewGuid(),
+                Title = albumCreateDto.Title,
+                ReleaseDate = albumCreateDto.ReleaseDate,
+                CoverUrl = coverUrl,
+                ArtistId = albumCreateDto.ArtistId
+            };
+
+            await _albumRepository.AddAsync(album);
+
+            // Prepare the response DTO
+            var albumDto = new AlbumResponseDto
+            {
+                Id = album.Id,
+                Title = album.Title,
+                ReleaseDate = album.ReleaseDate,
+                CoverUrl = album.CoverUrl,
+                ArtistId = album.ArtistId,
+                ArtistName = artist.Name
+            };
+
+            return ApiResponse<AlbumResponseDto>.SuccessResponse(albumDto, "Album created successfully.");
         }
+
 
 
 
@@ -106,5 +165,26 @@ namespace GrooveNest.Service.Services
         {
             throw new NotImplementedException();
         }
+
+
+        private static async Task<string?> SaveCoverAsync(IFormFile coverFile)
+        {
+            if (coverFile == null || coverFile.Length == 0)
+                return null; // No cover file provided
+
+            // Example saving logic
+            var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(coverFile.FileName)}";
+            var filePath = Path.Combine("wwwroot", "uploads", "covers", fileName);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!); // Ensure folder exists
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await coverFile.CopyToAsync(stream);
+            }
+
+            return $"/uploads/covers/{fileName}"; // return relative URL for access
+        }
+
     }
 }

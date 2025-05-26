@@ -267,6 +267,7 @@ namespace GrooveNest.Service.Services
             if (!string.IsNullOrEmpty(artist.AvatarUrl))
             {
                 var avatarPath = Path.Combine("wwwroot", artist.AvatarUrl.TrimStart('/'));
+
                 if (File.Exists(avatarPath))
                 {
                     try
@@ -287,12 +288,12 @@ namespace GrooveNest.Service.Services
         // ------------------------------------------------------------------------ //
         // ------------------------ SaveAvatarAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------ // 
-        private async Task<string?> SaveAvatarAsync(IFormFile? avatarFile)
+        private static async Task<string?> SaveAvatarAsync(IFormFile? avatarFile)
         {
             if (avatarFile == null || avatarFile.Length == 0)
                 return null;
 
-            var uploadsFolder = Path.Combine("wwwroot", "avatars");
+            var uploadsFolder = Path.Combine("wwwroot", "uploads", "avatars");
             Directory.CreateDirectory(uploadsFolder);
 
             var uniqueFileName = Guid.NewGuid() + Path.GetExtension(avatarFile.FileName);
@@ -303,7 +304,7 @@ namespace GrooveNest.Service.Services
                 await avatarFile.CopyToAsync(stream);
             }
 
-            return $"/avatars/{uniqueFileName}";
+            return $"/uploads/avatars/{uniqueFileName}";
         }
 
     }
