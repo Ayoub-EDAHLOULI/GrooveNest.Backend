@@ -29,6 +29,7 @@ builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<UserRoleRepository>();
 builder.Services.AddScoped<ArtistRepository>();
 builder.Services.AddScoped<AlbumRepository>();
+builder.Services.AddScoped<PlaylistRepository>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<IAlbumRepository, AlbumRepository>();
+builder.Services.AddScoped<IPlaylistRepository, PlaylistRepository>();
 
 
 builder.Services.AddScoped<UserService>();
@@ -44,6 +46,7 @@ builder.Services.AddScoped<UserRoleService>();
 builder.Services.AddScoped<ArtistApplicationService>();
 builder.Services.AddScoped<ArtistService>();
 builder.Services.AddScoped<AlbumService>();
+builder.Services.AddScoped<PlaylistService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -52,6 +55,7 @@ builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IArtistApplicationService, ArtistApplicationService>();
 builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddScoped<IPlaylistService, PlaylistService>();
 
 
 
