@@ -148,7 +148,78 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ UpdateAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<AlbumResponseDto>> UpdateAlbumAsync(Guid id, AlbumUpdateDto albumUpdateDto)
+        {
+            // Check if the album id exists
+            var existingAlbum = await _albumRepository.GetByIdAsync(id);
+            if (existingAlbum == null)
+            {
+                return ApiResponse<AlbumResponseDto>.ErrorResponse("Album not found.");
+            }
 
+            // Update inputs if provided
+            if (!string.IsNullOrWhiteSpace(albumUpdateDto.Title))
+            {
+                // Trim the title to avoid leading/trailing spaces
+                var trimmedTitle = StringValidator.TrimOrEmpty(albumUpdateDto.Title);
+
+                // Validate the title length
+                if (trimmedTitle.Length < 3)
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("Title must be at least 3 characters long.");
+                }
+
+                // Check if the title already exists
+                var existingAlbumWithTitle = await _albumRepository.GetAlbumByTitle(trimmedTitle);
+                if (existingAlbumWithTitle != null && existingAlbumWithTitle.Id != id)
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("An album with this title already exists.");
+                }
+
+                existingAlbum.Title = trimmedTitle;
+            }
+
+            if (albumUpdateDto.ReleaseDate.HasValue)
+            {
+                existingAlbum.ReleaseDate = albumUpdateDto.ReleaseDate.Value;
+            }
+
+            // Validate and save cover file if provided
+            if (albumUpdateDto.Cover != null)
+            {
+                if (albumUpdateDto.Cover.Length > 5 * 1024 * 1024)
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("Cover file size exceeds the limit of 5 MB.");
+                }
+                if (!albumUpdateDto.Cover.ContentType.StartsWith("image/"))
+                {
+                    return ApiResponse<AlbumResponseDto>.ErrorResponse("Cover must be an image file.");
+                }
+                existingAlbum.CoverUrl = await SaveCoverAsync(albumUpdateDto.Cover);
+            }
+
+            // Save changes to the repository
+            await _albumRepository.UpdateAsync(existingAlbum);
+
+            // Fetch the artist details
+            var artist = existingAlbum.Artist ?? await _artistRepository.GetByIdAsync(existingAlbum.ArtistId);
+
+            // Prepare the response DTO
+            var updatedAlbumDto = new AlbumResponseDto
+            {
+                Id = existingAlbum.Id,
+                Title = existingAlbum.Title,
+                ReleaseDate = existingAlbum.ReleaseDate,
+                CoverUrl = existingAlbum.CoverUrl,
+                ArtistId = existingAlbum.ArtistId,
+                ArtistName = artist?.Name ?? "Unknown Artist"
+            };
+
+            return ApiResponse<AlbumResponseDto>.SuccessResponse(updatedAlbumDto, "Album updated successfully.");
+        }
 
 
         public Task<ApiResponse<string>> DeleteAlbumAsync(Guid id)
@@ -157,11 +228,6 @@ namespace GrooveNest.Service.Services
         }
 
         public Task<ApiResponse<AlbumResponseDto>> GetAlbumByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<AlbumResponseDto>> UpdateAlbumAsync(Guid id, AlbumUpdateDto albumUpdateDto)
         {
             throw new NotImplementedException();
         }
