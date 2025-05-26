@@ -84,9 +84,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // ------------------------------------------------------------------------- //
-        // ------------------------ CreateAlbumAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------- // 
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetAlbumByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
         public async Task<ApiResponse<AlbumResponseDto>> GetAlbumByIdAsync(Guid id)
         {
             // Check if the album id exists
@@ -246,12 +246,48 @@ namespace GrooveNest.Service.Services
         }
 
 
-        public Task<ApiResponse<string>> DeleteAlbumAsync(Guid id)
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ DeleteAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<string>> DeleteAlbumAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Check if the album exists
+            var album = await _albumRepository.GetByIdAsync(id);
+            if (album == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Album not found.");
+            }
+
+            // Try to delete the cover image if it exists
+            if (!string.IsNullOrEmpty(album.CoverUrl))
+            {
+                try
+                {
+                    // Sanitize the path
+                    var sanitizedPath = album.CoverUrl.Replace("../", "").TrimStart('/');
+
+                    // Combine with wwwroot
+                    var coverFilePath = Path.Combine("wwwroot", sanitizedPath);
+
+                    if (File.Exists(coverFilePath))
+                    {
+                        File.Delete(coverFilePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Optional: Log the exception
+                    Console.WriteLine($"Failed to delete album cover: {ex.Message}");
+                }
+            }
+
+            // Delete the album from the repository
+            await _albumRepository.DeleteAsync(album);
+
+            // Return success response
+            return ApiResponse<string>.SuccessResponse("Album deleted successfully.");
         }
-
-
 
 
         private static async Task<string?> SaveCoverAsync(IFormFile coverFile)
