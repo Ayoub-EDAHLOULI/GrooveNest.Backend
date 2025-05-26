@@ -84,6 +84,30 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ------------------------------------------------------------------------- //
+        // ------------------------ CreateAlbumAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<AlbumResponseDto>> GetAlbumByIdAsync(Guid id)
+        {
+            // Check if the album id exists
+            var album = await _albumRepository.GetByIdAsync(id);
+            if (album == null)
+            {
+                return ApiResponse<AlbumResponseDto>.ErrorResponse("Album not found.");
+            }
+            // Prepare the response DTO
+            var albumDto = new AlbumResponseDto
+            {
+                Id = album.Id,
+                Title = album.Title,
+                ReleaseDate = album.ReleaseDate,
+                CoverUrl = album.CoverUrl,
+                ArtistId = album.ArtistId,
+                ArtistName = album.Artist?.Name ?? "Unknown Artist"
+            };
+            return ApiResponse<AlbumResponseDto>.SuccessResponse(albumDto, "Album retrieved successfully.");
+        }
+
 
         // ------------------------------------------------------------------------- //
         // ------------------------ CreateAlbumAsync METHODS ----------------------- //
@@ -227,10 +251,7 @@ namespace GrooveNest.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<AlbumResponseDto>> GetAlbumByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+
 
 
         private static async Task<string?> SaveCoverAsync(IFormFile coverFile)
