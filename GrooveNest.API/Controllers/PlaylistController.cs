@@ -75,7 +75,20 @@ namespace GrooveNest.API.Controllers
         }
 
 
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ UpdatePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
 
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdatePlaylistAsync(Guid id, [FromBody] PlaylistUpdateDto playlistUpdateDto)
+        {
+            var response = await _playlistService.UpdatePlaylistAsync(id, playlistUpdateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
     }
 }
