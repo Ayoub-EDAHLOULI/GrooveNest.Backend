@@ -4,8 +4,6 @@ using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using NAudio.Wave;
 
 namespace GrooveNest.Service.Services
 {
@@ -154,6 +152,48 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle)
+        {
+            if (StringValidator.IsNullOrWhiteSpace(albumTitle))
+            {
+                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("Album title cannot be empty.");
+            }
+
+            var tracks = await _trackRepository.GetTracksByAlbumTitleAsync(albumTitle);
+            if (tracks == null || !tracks.Any())
+            {
+                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("No tracks found for this album title.");
+            }
+
+            var responses = new List<TrackResponseDto>();
+            foreach (var track in tracks)
+            {
+                var artist = await _artistRepository.GetByIdAsync(track.ArtistId);
+                var album = track.AlbumId.HasValue ? await _albumRepository.GetByIdAsync(track.AlbumId.Value) : null;
+
+                var responseDto = new TrackResponseDto
+                {
+                    Id = track.Id,
+                    Title = track.Title,
+                    DurationSec = track.DurationSec,
+                    AudioUrl = track.AudioUrl,
+                    TrackNumber = track.TrackNumber,
+                    ArtistId = track.ArtistId,
+                    ArtistName = artist?.Name ?? string.Empty,
+                    AlbumId = track.AlbumId,
+                    AlbumTitle = album?.Title
+                };
+
+                responses.Add(responseDto);
+            }
+
+            return ApiResponse<List<TrackResponseDto>>.SuccessResponse(responses, "Tracks retrieved successfully.");
+        }
+
+
         public Task<string> DeleteTrackAsync(Guid id)
         {
             throw new NotImplementedException();
@@ -167,11 +207,6 @@ namespace GrooveNest.Service.Services
 
 
         public Task<IEnumerable<ApiResponse<TrackResponseDto>>> GetTracksByAlbumIdAsync(Guid albumId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<ApiResponse<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle)
         {
             throw new NotImplementedException();
         }
@@ -202,5 +237,14 @@ namespace GrooveNest.Service.Services
             return $"/{subDirectory}/{fileName}";
         }
 
+        Task<ApiResponse<List<TrackResponseDto>>> ITrackService.GetTracksByArtistIdAsync(Guid artistId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<ApiResponse<TrackResponseDto>>> ITrackService.GetTracksByAlbumTitleAsync(string albumTitle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
