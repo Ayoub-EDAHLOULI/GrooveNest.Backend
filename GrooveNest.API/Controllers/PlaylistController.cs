@@ -24,5 +24,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------------------- //
+        // ------------------------ GetAllPaginatedPlaylistsAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------------- //
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllPaginatedPlaylistsAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "")
+        {
+            var response = await _playlistService.GetAllPaginatedPlaylistsAsync(page, pageSize, search);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
