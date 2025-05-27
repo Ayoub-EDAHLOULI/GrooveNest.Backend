@@ -1,4 +1,5 @@
-﻿using GrooveNest.Service.Services;
+﻿using GrooveNest.Domain.DTOs.PlaylistDTOs;
+using GrooveNest.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
@@ -56,6 +57,24 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ CreatePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePlaylistAsync([FromBody] PlaylistCreateDto playlistCreateDto)
+        {
+            var response = await _playlistService.CreatePlaylistAsync(playlistCreateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
 
 
     }
