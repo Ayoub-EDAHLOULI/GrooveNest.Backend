@@ -27,5 +27,23 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+
+        [HttpGet("title/{title}")]
+        public async Task<IActionResult> GetTrackByTitleAsync(string title)
+        {
+            var response = await _trackService.GetTrackByTitleAsync(title);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+
+            return Ok(response);
+        }
+
+
     }
 }
