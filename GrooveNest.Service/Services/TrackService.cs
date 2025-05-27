@@ -19,7 +19,7 @@ namespace GrooveNest.Service.Services
         // ------------------------------------------------------------------------- //
         // ------------------------ CreateTrackAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto, IFormFile audioFile)
+        public async Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto, IFormFile AudioFile)
         {
             // Validate title
             if (!StringValidator.IsNullOrWhiteSpace(trackCreateDto.Title))
@@ -64,13 +64,13 @@ namespace GrooveNest.Service.Services
             }
 
             // Ensure audio file is provided
-            if (audioFile == null || audioFile.Length == 0)
+            if (AudioFile == null || AudioFile.Length == 0)
             {
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Audio file is required.");
             }
 
             var allowedTypes = new[] { "audio/mpeg", "audio/mp3", "audio/wav" };
-            if (!allowedTypes.Contains(audioFile.ContentType))
+            if (!allowedTypes.Contains(AudioFile.ContentType))
             {
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Invalid audio file type.");
             }
@@ -78,12 +78,12 @@ namespace GrooveNest.Service.Services
 
             // Save to memory stream for duration extraction
             using var memoryStream = new MemoryStream();
-            await audioFile.CopyToAsync(memoryStream);
+            await AudioFile.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
             int durationSec = AudioHelper.GetAudioDurationInSeconds(memoryStream);
 
             // Save the file to disk and get relative URL
-            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(audioFile.FileName)}";
+            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(AudioFile.FileName)}";
             var relativeAudioUrl = FileHelper.SaveFile(memoryStream, uniqueFileName, "uploads/tracks");
 
 
