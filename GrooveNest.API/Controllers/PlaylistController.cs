@@ -90,5 +90,20 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+
+        // ---------------------------------------------------------------------------- //
+        // ------------------------ DeletePlaylistAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------- //
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeletePlaylistAsync(Guid id)
+        {
+            var response = await _playlistService.DeletePlaylistAsync(id);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
