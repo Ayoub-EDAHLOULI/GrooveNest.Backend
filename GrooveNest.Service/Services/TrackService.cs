@@ -3,78 +3,120 @@ using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using NAudio.Wave;
 
 namespace GrooveNest.Service.Services
 {
-    public class TrackService(ITrackRepository trackRepository) : ITrackService
+    public class TrackService(ITrackRepository trackRepository, IAlbumRepository albumRepository, IArtistRepository artistRepository) : ITrackService
     {
         private readonly ITrackRepository _trackRepository = trackRepository;
+        private readonly IAlbumRepository _albumRepository = albumRepository;
+        private readonly IArtistRepository _artistRepository = artistRepository;
 
 
         // ------------------------------------------------------------------------- //
         // ------------------------ CreateTrackAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto)
+        public async Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto, IFormFile audioFile)
         {
-            // Validate the title
+            // Validate title
             if (!StringValidator.IsNullOrWhiteSpace(trackCreateDto.Title))
             {
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Track title cannot be empty.");
             }
 
-            // Validate the file
-            if (trackCreateDto.AudioFile == null || trackCreateDto.AudioFile.Length == 0)
+            // Check if track with the same title already exists
+            var existingTrack = await _trackRepository.GetTrackByTitleAsync(trackCreateDto.Title);
+            if (existingTrack != null)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("A track with this title already exists.");
+            }
+
+            // Validate track number
+            if (trackCreateDto.TrackNumber <= 0)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Track number must be greater than zero.");
+            }
+
+            // Validate artist and album IDs
+            if (trackCreateDto.ArtistId == Guid.Empty)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Artist ID is required.");
+            }
+
+            // Check if artist exists
+            var artistExists = await _artistRepository.GetByIdAsync(trackCreateDto.ArtistId);
+            if (artistExists == null)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Artist does not exist.");
+            }
+
+            if (trackCreateDto.AlbumId != Guid.Empty)
+            {
+                // Check if album exists
+                var albumExists = await _albumRepository.GetByIdAsync(trackCreateDto.AlbumId);
+                if (albumExists == null)
+                {
+                    return ApiResponse<TrackResponseDto>.ErrorResponse("Album does not exist.");
+                }
+            }
+
+            // Ensure audio file is provided
+            if (audioFile == null || audioFile.Length == 0)
             {
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Audio file is required.");
             }
 
-            // Save the audio file
-            var uploadsFolder = Path.Combine("wwwroot", "audio");
-            Directory.CreateDirectory(uploadsFolder);
-
-            var uniqueFileName = Guid.NewGuid() + Path.GetExtension(trackCreateDto.AudioFile.FileName);
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            var allowedTypes = new[] { "audio/mpeg", "audio/mp3", "audio/wav" };
+            if (!allowedTypes.Contains(audioFile.ContentType))
             {
-                await trackCreateDto.AudioFile.CopyToAsync(stream);
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Invalid audio file type.");
             }
 
-            var audioUrl = $"/audio/{uniqueFileName}";
 
-            // Validate the duration
+            // Save to memory stream for duration extraction
+            using var memoryStream = new MemoryStream();
+            await audioFile.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            int durationSec = AudioHelper.GetAudioDurationInSeconds(memoryStream);
+
+            // Save the file to disk and get relative URL
+            var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(audioFile.FileName)}";
+            var relativeAudioUrl = FileHelper.SaveFile(memoryStream, uniqueFileName, "uploads/tracks");
 
 
-            // Create the track entity
-            var track = new Track
+            // Create new track
+            var newTrack = new Track
             {
                 Title = trackCreateDto.Title,
-                DurationSec = trackCreateDto.DurationSec,
                 TrackNumber = trackCreateDto.TrackNumber,
-                AudioUrl = audioUrl,
+                AudioUrl = relativeAudioUrl,
+                DurationSec = durationSec,
                 ArtistId = trackCreateDto.ArtistId,
                 AlbumId = trackCreateDto.AlbumId
             };
 
-            await _trackRepository.AddAsync(track);
 
-            // Prepare the response DTO
-            var trackDto = new TrackResponseDto
+            await _trackRepository.AddAsync(newTrack);
+
+            var responseDto = new TrackResponseDto
             {
-                Id = track.Id,
-                Title = track.Title,
-                DurationSec = track.DurationSec,
-                AudioUrl = track.AudioUrl,
-                TrackNumber = track.TrackNumber,
-                ArtistId = track.ArtistId,
-                ArtistName = track.Artist?.Name ?? "Unknown Artist",
-                AlbumId = track.AlbumId,
-                AlbumTitle = track.Album?.Title
+                Id = newTrack.Id,
+                Title = newTrack.Title,
+                DurationSec = newTrack.DurationSec,
+                AudioUrl = newTrack.AudioUrl,
+                TrackNumber = newTrack.TrackNumber,
+                ArtistId = newTrack.ArtistId,
+                ArtistName = artistExists.Name,
+                AlbumId = newTrack.AlbumId,
+                AlbumTitle = newTrack.AlbumId.HasValue ? (await _albumRepository.GetByIdAsync(newTrack.AlbumId.Value))?.Title : null
             };
 
-            return ApiResponse<TrackResponseDto>.SuccessResponse(trackDto, "Track created successfully.");
+            return ApiResponse<TrackResponseDto>.SuccessResponse(responseDto, "Track created successfully.");
         }
+
 
 
         public Task<string> DeleteTrackAsync(Guid id)
@@ -116,5 +158,17 @@ namespace GrooveNest.Service.Services
         {
             throw new NotImplementedException();
         }
+
+
+        public static string SaveFile(IFormFile file, string subDirectory)
+        {
+            var fileName = Path.GetFileName(file.FileName);
+            var savePath = Path.Combine("wwwroot", subDirectory, fileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(savePath)!);
+            using var stream = new FileStream(savePath, FileMode.Create);
+            file.CopyTo(stream);
+            return $"/{subDirectory}/{fileName}";
+        }
+
     }
 }
