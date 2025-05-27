@@ -10,7 +10,6 @@ namespace GrooveNest.API.Controllers
     {
         private readonly TrackService _trackService = trackService;
 
-
         // ------------------------------------------------------------------------- //
         // ------------------------ CreateTrackAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
@@ -20,13 +19,12 @@ namespace GrooveNest.API.Controllers
         public async Task<IActionResult> CreateTrackAsync([FromForm] TrackCreateDto trackCreateDto, IFormFile audioFile)
         {
             var response = await _trackService.CreateTrackAsync(trackCreateDto, audioFile);
-            if (!response.Success)
+            if (response == null || !response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-
 
         // ----------------------------------------------------------------------------- //
         // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
@@ -44,6 +42,21 @@ namespace GrooveNest.API.Controllers
             return Ok(response);
         }
 
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByAlbumTitleAsync METHODS ----------------- //
+        // ----------------------------------------------------------------------------- // 
 
+        [HttpGet("album/{albumTitle}")]
+        public async Task<IActionResult> GetTracksByAlbumTitleAsync(string albumTitle)
+        {
+            var response = await _trackService.GetTracksByAlbumTitleAsync(albumTitle);
+
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+
+            return Ok(response);
+        }
     }
 }
