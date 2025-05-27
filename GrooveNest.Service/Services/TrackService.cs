@@ -118,6 +118,41 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<TrackResponseDto>?> GetTrackByTitleAsync(string title)
+        {
+            if (StringValidator.IsNullOrWhiteSpace(title))
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Track title cannot be empty.");
+            }
+
+            var track = await _trackRepository.GetTrackByTitleAsync(title);
+            if (track == null)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Track not found.");
+            }
+
+            var artist = await _artistRepository.GetByIdAsync(track.ArtistId);
+            var album = track.AlbumId.HasValue ? await _albumRepository.GetByIdAsync(track.AlbumId.Value) : null;
+
+            var responseDto = new TrackResponseDto
+            {
+                Id = track.Id,
+                Title = track.Title,
+                DurationSec = track.DurationSec,
+                AudioUrl = track.AudioUrl,
+                TrackNumber = track.TrackNumber,
+                ArtistId = track.ArtistId,
+                ArtistName = artist?.Name ?? string.Empty,
+                AlbumId = track.AlbumId,
+                AlbumTitle = album?.Title
+            };
+
+            return ApiResponse<TrackResponseDto>.SuccessResponse(responseDto, "Track retrieved successfully.");
+        }
+
 
         public Task<string> DeleteTrackAsync(Guid id)
         {
@@ -129,10 +164,7 @@ namespace GrooveNest.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<TrackResponseDto>?> GetTrackByTitleAsync(string title)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<IEnumerable<ApiResponse<TrackResponseDto>>> GetTracksByAlbumIdAsync(Guid albumId)
         {
