@@ -9,17 +9,33 @@ namespace GrooveNest.Service.Services
     {
         private readonly IGenreRepository _genreRepository = genreRepository;
 
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetAllGenresAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<GenreResponseDto>>> GetAllGenresAsync()
+        {
+            var genres = await _genreRepository.GetAllAsync();
+            if (genres == null || !genres.Any())
+            {
+                return ApiResponse<List<GenreResponseDto>>.ErrorResponse("No genres found.");
+            }
+
+            var genreDtos = genres.Select(g => new GenreResponseDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+            }).ToList();
+
+            return ApiResponse<List<GenreResponseDto>>.SuccessResponse(genreDtos, "Genres retrieved successfully.");
+        }
+
         public Task<ApiResponse<GenreResponseDto>> CreateGenreAsync(GenreCreateDto genreCreateDto)
         {
             throw new NotImplementedException();
         }
 
         public Task<ApiResponse<string>> DeleteGenreAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<List<GenreResponseDto>>> GetAllGenresAsync()
         {
             throw new NotImplementedException();
         }
