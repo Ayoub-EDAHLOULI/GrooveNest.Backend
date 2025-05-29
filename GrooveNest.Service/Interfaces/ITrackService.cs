@@ -11,7 +11,7 @@ namespace GrooveNest.Service.Interfaces
         Task<ApiResponse<List<TrackResponseDto>>> GetTracksByArtistIdAsync(Guid artistId);
         Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByAlbumIdAsync(Guid albumId);
         Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByArtistNameAsync(string artistName);
-        Task<IEnumerable<ApiResponse<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle);
+        Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle);
         Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto, IFormFile formFile);
         Task<ApiResponse<TrackResponseDto>> UpdateTrackAsync(Guid id, TrackUpdateDto trackUpdateDto);
         Task<string> DeleteTrackAsync(Guid id);
