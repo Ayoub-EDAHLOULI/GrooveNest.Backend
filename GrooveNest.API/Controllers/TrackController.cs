@@ -122,5 +122,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ UpdateTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTrackAsync(Guid id, [FromBody] TrackUpdateDto trackUpdateDto)
+        {
+            var response = await _trackService.UpdateTrackAsync(id, trackUpdateDto);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
