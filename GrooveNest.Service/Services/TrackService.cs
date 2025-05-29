@@ -421,6 +421,9 @@ namespace GrooveNest.Service.Services
         }
 
 
+        // ----------------------------------------------------------------- //
+        // ------------------------ SaveFile METHODS ----------------------- //
+        // ----------------------------------------------------------------- // 
         public static string SaveFile(IFormFile file, string subDirectory)
         {
             var fileName = Path.GetFileName(file.FileName);

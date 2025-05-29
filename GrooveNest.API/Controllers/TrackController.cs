@@ -58,5 +58,21 @@ namespace GrooveNest.API.Controllers
 
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTrackByIdAsync(Guid id)
+        {
+            var response = await _trackService.GetTrackByIdAsync(id);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
