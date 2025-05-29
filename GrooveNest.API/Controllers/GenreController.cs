@@ -89,5 +89,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ DeleteGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteGenreAsync(int id)
+        {
+            var response = await _genreService.DeleteGenreAsync(id);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
