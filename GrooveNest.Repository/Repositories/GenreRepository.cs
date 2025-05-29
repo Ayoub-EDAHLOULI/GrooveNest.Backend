@@ -1,0 +1,16 @@
+﻿using GrooveNest.Domain.Entities;
+using GrooveNest.Repository.Data;
+using GrooveNest.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace GrooveNest.Repository.Repositories
+{
+    public class GenreRepository(AppDbContext context) : GenericRepository<Genre, int>(context), IGenreRepository
+    {
+        public async Task<Genre?> GetGenreByName(string name)
+        {
+            return await _context.Genres
+                .FirstOrDefaultAsync(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+}
