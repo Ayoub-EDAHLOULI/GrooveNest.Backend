@@ -31,9 +31,9 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // -------------------------------------------------------------------------- //
-        // ------------------------ GetAllGenresAsync METHODS ----------------------- //
-        // -------------------------------------------------------------------------- // 
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetAllPaginatedGenresAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
         public async Task<ApiResponse<object>> GetAllPaginatedGenresAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
             var genres = await _genreRepository.GetAllAsync();
@@ -67,22 +67,36 @@ namespace GrooveNest.Service.Services
             return ApiResponse<object>.SuccessResponse(response, "Genres retrieved successfully.");
         }
 
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<GenreResponseDto>> GetGenreByIdAsync(int id)
+        {
+            var genre = await _genreRepository.GetByIdAsync(id);
+            if (genre == null)
+            {
+                return ApiResponse<GenreResponseDto>.ErrorResponse("Genre not found.");
+            }
+            var genreDto = new GenreResponseDto
+            {
+                Id = genre.Id,
+                Name = genre.Name,
+            };
+            return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre retrieved successfully.");
+        }
+
         public Task<ApiResponse<GenreResponseDto>> CreateGenreAsync(GenreCreateDto genreCreateDto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<string>> DeleteGenreAsync(Guid id)
+        public Task<ApiResponse<string>> DeleteGenreAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<GenreResponseDto>> GetGenreByIdAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(Guid id, GenreUpdateDto genreUpdateDto)
+        public Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(int id, GenreUpdateDto genreUpdateDto)
         {
             throw new NotImplementedException();
         }
