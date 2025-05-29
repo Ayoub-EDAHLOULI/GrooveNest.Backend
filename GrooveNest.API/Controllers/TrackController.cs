@@ -138,5 +138,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ DeleteTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTrackAsync(Guid id)
+        {
+            var response = await _trackService.DeleteTrackAsync(id);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
