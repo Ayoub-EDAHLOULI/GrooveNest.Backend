@@ -395,14 +395,29 @@ namespace GrooveNest.Service.Services
         }
 
 
-
-
-
-
-
-        public Task<string> DeleteTrackAsync(Guid id)
+        // ------------------------------------------------------------------------- //
+        // ------------------------ DeleteTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<string>> DeleteTrackAsync(Guid id)
         {
-            throw new NotImplementedException();
+            // Check if track exists
+            var existingTrack = await _trackRepository.GetByIdAsync(id);
+            if (existingTrack == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Track not found.");
+            }
+            // Delete the track
+            await _trackRepository.DeleteAsync(existingTrack);
+            // Optionally, delete the audio file from disk
+            if (!string.IsNullOrEmpty(existingTrack.AudioUrl))
+            {
+                var filePath = Path.Combine("wwwroot", existingTrack.AudioUrl.TrimStart('/'));
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Track deleted successfully.");
         }
 
 
