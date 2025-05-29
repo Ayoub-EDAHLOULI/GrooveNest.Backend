@@ -74,5 +74,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByAlbumIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------- // 
+
+        [HttpGet("album/{albumId}")]
+        public async Task<IActionResult> GetTracksByAlbumIdAsync(Guid albumId)
+        {
+            var response = await _trackService.GetTracksByAlbumIdAsync(albumId);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
