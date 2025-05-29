@@ -1,4 +1,5 @@
 ﻿using GrooveNest.Domain.DTOs.GenreDTOs;
+using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
@@ -86,9 +87,35 @@ namespace GrooveNest.Service.Services
             return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre retrieved successfully.");
         }
 
-        public Task<ApiResponse<GenreResponseDto>> CreateGenreAsync(GenreCreateDto genreCreateDto)
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ CreateGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<GenreResponseDto>> CreateGenreAsync(GenreCreateDto genreCreateDto)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(genreCreateDto.Name))
+            {
+                return ApiResponse<GenreResponseDto>.ErrorResponse("Genre name cannot be empty.");
+            }
+
+            var trimmedName = StringValidator.TrimOrEmpty(genreCreateDto.Name);
+
+            var existingGenre = await _genreRepository.GetGenreByName(trimmedName);
+            if (existingGenre != null)
+            {
+                return ApiResponse<GenreResponseDto>.ErrorResponse("Genre already exists.");
+            }
+            var newGenre = new Genre
+            {
+                Name = trimmedName
+            };
+            await _genreRepository.AddAsync(newGenre);
+            var genreDto = new GenreResponseDto
+            {
+                Id = newGenre.Id,
+                Name = newGenre.Name,
+            };
+            return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre created successfully.");
         }
 
         public Task<ApiResponse<string>> DeleteGenreAsync(int id)
