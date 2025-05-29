@@ -256,12 +256,37 @@ namespace GrooveNest.Service.Services
         }
 
 
-        public Task<string> DeleteTrackAsync(Guid id)
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByArtistIdAsync(Guid artistId)
         {
-            throw new NotImplementedException();
+            var tracks = await _trackRepository.GetTracksByArtistIdAsync(artistId);
+            if (tracks == null || !tracks.Any())
+            {
+                return ApiResponse<IEnumerable<TrackResponseDto>>.ErrorResponse("No tracks found for this artist ID.");
+            }
+            var responses = tracks.Select(track =>
+            {
+                var artist = _artistRepository.GetByIdAsync(track.ArtistId).Result;
+                var album = track.AlbumId.HasValue ? _albumRepository.GetByIdAsync(track.AlbumId.Value).Result : null;
+                return new TrackResponseDto
+                {
+                    Id = track.Id,
+                    Title = track.Title,
+                    DurationSec = track.DurationSec,
+                    AudioUrl = track.AudioUrl,
+                    TrackNumber = track.TrackNumber,
+                    ArtistId = track.ArtistId,
+                    ArtistName = artist?.Name ?? string.Empty,
+                    AlbumId = track.AlbumId,
+                    AlbumTitle = album?.Title
+                };
+            });
+            return ApiResponse<IEnumerable<TrackResponseDto>>.SuccessResponse(responses, "Tracks retrieved successfully.");
         }
 
-        public Task<IEnumerable<ApiResponse<TrackResponseDto>>> GetTracksByArtistIdAsync(Guid artistId)
+        public Task<string> DeleteTrackAsync(Guid id)
         {
             throw new NotImplementedException();
         }
