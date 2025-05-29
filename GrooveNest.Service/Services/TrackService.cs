@@ -194,12 +194,36 @@ namespace GrooveNest.Service.Services
         }
 
 
-        public Task<string> DeleteTrackAsync(Guid id)
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<TrackResponseDto>?> GetTrackByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var track = await _trackRepository.GetByIdAsync(id);
+            if (track == null)
+            {
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Track not found.");
+            }
+            var artist = await _artistRepository.GetByIdAsync(track.ArtistId);
+            var album = track.AlbumId.HasValue ? await _albumRepository.GetByIdAsync(track.AlbumId.Value) : null;
+            var responseDto = new TrackResponseDto
+            {
+                Id = track.Id,
+                Title = track.Title,
+                DurationSec = track.DurationSec,
+                AudioUrl = track.AudioUrl,
+                TrackNumber = track.TrackNumber,
+                ArtistId = track.ArtistId,
+                ArtistName = artist?.Name ?? string.Empty,
+                AlbumId = track.AlbumId,
+                AlbumTitle = album?.Title
+            };
+            return ApiResponse<TrackResponseDto>.SuccessResponse(responseDto, "Track retrieved successfully.");
         }
 
-        public Task<ApiResponse<TrackResponseDto>?> GetTrackByIdAsync(Guid id)
+
+
+        public Task<string> DeleteTrackAsync(Guid id)
         {
             throw new NotImplementedException();
         }

@@ -30,8 +30,8 @@ namespace GrooveNest.API.Controllers
         // ------------------------ GetTrackByTitleAsync METHODS ----------------------- //
         // ----------------------------------------------------------------------------- // 
 
-        [HttpGet("title/{title}")]
-        public async Task<IActionResult> GetTrackByTitleAsync(string title)
+        [HttpGet("title")]
+        public async Task<IActionResult> GetTrackByTitleAsync([FromBody] string title)
         {
             var response = await _trackService.GetTrackByTitleAsync(title);
             if (response == null || !response.Success)
@@ -46,8 +46,8 @@ namespace GrooveNest.API.Controllers
         // ------------------------ GetTracksByAlbumTitleAsync METHODS ----------------- //
         // ----------------------------------------------------------------------------- // 
 
-        [HttpGet("album/{albumTitle}")]
-        public async Task<IActionResult> GetTracksByAlbumTitleAsync(string albumTitle)
+        [HttpGet("album")]
+        public async Task<IActionResult> GetTracksByAlbumTitleAsync([FromForm] string albumTitle)
         {
             var response = await _trackService.GetTracksByAlbumTitleAsync(albumTitle);
 
