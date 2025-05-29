@@ -156,17 +156,17 @@ namespace GrooveNest.Service.Services
         // ----------------------------------------------------------------------------------- //
         // ------------------------ GetTracksByAlbumTitleAsync METHODS ----------------------- //
         // ----------------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<List<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle)
+        public async Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByAlbumTitleAsync(string albumTitle)
         {
             if (StringValidator.IsNullOrWhiteSpace(albumTitle))
             {
-                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("Album title cannot be empty.");
+                return ApiResponse<IEnumerable<TrackResponseDto>>.ErrorResponse("Album title cannot be empty.");
             }
 
             var tracks = await _trackRepository.GetTracksByAlbumTitleAsync(albumTitle);
             if (tracks == null || !tracks.Any())
             {
-                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("No tracks found for this album title.");
+                return ApiResponse<IEnumerable<TrackResponseDto>>.ErrorResponse("No tracks found for this album title.");
             }
 
             var responses = new List<TrackResponseDto>();
@@ -191,7 +191,7 @@ namespace GrooveNest.Service.Services
                 responses.Add(responseDto);
             }
 
-            return ApiResponse<List<TrackResponseDto>>.SuccessResponse(responses, "Tracks retrieved successfully.");
+            return ApiResponse<IEnumerable<TrackResponseDto>>.SuccessResponse(responses, "Tracks retrieved successfully.");
         }
 
 
@@ -320,48 +320,79 @@ namespace GrooveNest.Service.Services
         }
 
 
-        // ----------------------------------------------------------------------------------- //
-        // ------------------------ GetTracksByArtistNameAsync METHODS ----------------------- //
-        // ----------------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<IEnumerable<TrackResponseDto>>> GetTracksByArtistIdAsync(Guid artistId)
+        // ------------------------------------------------------------------------- //
+        // ------------------------ UpdateTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<TrackResponseDto>> UpdateTrackAsync(Guid id, TrackUpdateDto trackUpdateDto)
         {
-            var tracks = await _trackRepository.GetTracksByArtistIdAsync(artistId);
-            if (tracks == null || !tracks.Any())
+            // Check if track exists
+            var existingTrack = await _trackRepository.GetByIdAsync(id);
+            if (existingTrack == null)
             {
-                return ApiResponse<IEnumerable<TrackResponseDto>>.ErrorResponse("No tracks found for this artist ID.");
+                return ApiResponse<TrackResponseDto>.ErrorResponse("Track not found.");
             }
 
-            var responses = tracks.Select(track =>
+            // Validate and update title
+            if (!StringValidator.IsNullOrWhiteSpace(trackUpdateDto.Title))
             {
-                var artist = _artistRepository.GetByIdAsync(track.ArtistId).Result;
-                var album = track.AlbumId.HasValue ? _albumRepository.GetByIdAsync(track.AlbumId.Value).Result : null;
-                return new TrackResponseDto
+                var trimmedTitle = StringValidator.TrimOrEmpty(trackUpdateDto.Title);
+                if (trimmedTitle!.Length < 1 || trimmedTitle.Length > 100)
                 {
-                    Id = track.Id,
-                    Title = track.Title,
-                    DurationSec = track.DurationSec,
-                    AudioUrl = track.AudioUrl,
-                    TrackNumber = track.TrackNumber,
-                    ArtistId = track.ArtistId,
-                    ArtistName = artist?.Name ?? string.Empty,
-                    AlbumId = track.AlbumId,
-                    AlbumTitle = album?.Title
-                };
-            });
+                    return ApiResponse<TrackResponseDto>.ErrorResponse("Track title must be between 1 and 100 characters.");
+                }
 
-            return ApiResponse<IEnumerable<TrackResponseDto>>.SuccessResponse(responses, "Tracks retrieved successfully.");
+                var existingTitleTrack = await _trackRepository.GetTrackByTitleAsync(trimmedTitle);
+                if (existingTitleTrack != null && existingTitleTrack.Id != id)
+                {
+                    return ApiResponse<TrackResponseDto>.ErrorResponse("A track with this title already exists.");
+                }
+
+                existingTrack.Title = trimmedTitle;
+            }
+
+            // Update track number
+            if (trackUpdateDto.TrackNumber.HasValue && trackUpdateDto.TrackNumber.Value > 0)
+            {
+                existingTrack.TrackNumber = trackUpdateDto.TrackNumber.Value;
+            }
+
+            // Update file if provided
+            if (trackUpdateDto.AudioFile != null && trackUpdateDto.AudioFile.Length > 0)
+            {
+                var allowedTypes = new[] { "audio/mpeg", "audio/mp3", "audio/wav" };
+                if (!allowedTypes.Contains(trackUpdateDto.AudioFile.ContentType))
+                {
+                    return ApiResponse<TrackResponseDto>.ErrorResponse("Invalid audio file type.");
+                }
+                // Save to memory stream for duration extraction
+                using var memoryStream = new MemoryStream();
+                await trackUpdateDto.AudioFile.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                int durationSec = AudioHelper.GetAudioDurationInSeconds(memoryStream);
+                // Save the file to disk and get relative URL
+                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(trackUpdateDto.AudioFile.FileName)}";
+                var relativeAudioUrl = FileHelper.SaveFile(memoryStream, uniqueFileName, "uploads/tracks");
+                existingTrack.AudioUrl = relativeAudioUrl;
+                existingTrack.DurationSec = durationSec;
+            }
+
+            await _trackRepository.UpdateAsync(existingTrack);
+
+            var responseDto = new TrackResponseDto
+            {
+                Id = existingTrack.Id,
+                Title = existingTrack.Title,
+                DurationSec = existingTrack.DurationSec,
+                AudioUrl = existingTrack.AudioUrl,
+                TrackNumber = existingTrack.TrackNumber,
+                ArtistId = existingTrack.ArtistId,
+                ArtistName = (await _artistRepository.GetByIdAsync(existingTrack.ArtistId))?.Name ?? string.Empty,
+                AlbumId = existingTrack.AlbumId,
+                AlbumTitle = existingTrack.AlbumId.HasValue ? (await _albumRepository.GetByIdAsync(existingTrack.AlbumId.Value))?.Title : null
+            };
+
+            return ApiResponse<TrackResponseDto>.SuccessResponse(responseDto, "Track updated successfully.");
         }
-
-
-
-
-
-        Task<ApiResponse<IEnumerable<TrackResponseDto>>> ITrackService.GetTracksByAlbumTitleAsync(string albumTitle)
-        {
-            throw new NotImplementedException();
-        }
-
-
 
 
 
@@ -370,11 +401,6 @@ namespace GrooveNest.Service.Services
 
 
         public Task<string> DeleteTrackAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<TrackResponseDto>> UpdateTrackAsync(Guid id, TrackUpdateDto trackUpdateDto)
         {
             throw new NotImplementedException();
         }
