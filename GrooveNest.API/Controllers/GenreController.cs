@@ -1,4 +1,5 @@
-﻿using GrooveNest.Service.Services;
+﻿using GrooveNest.Domain.DTOs.GenreDTOs;
+using GrooveNest.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
@@ -53,6 +54,22 @@ namespace GrooveNest.API.Controllers
             if (!response.Success)
             {
                 return NotFound(response);
+            }
+            return Ok(response);
+        }
+
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ CreateGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGenreAsync([FromBody] GenreCreateDto genreCreateDto)
+        {
+            var response = await _genreService.CreateGenreAsync(genreCreateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
             }
             return Ok(response);
         }
