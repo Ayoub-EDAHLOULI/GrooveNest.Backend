@@ -118,12 +118,47 @@ namespace GrooveNest.Service.Services
             return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre created successfully.");
         }
 
-        public Task<ApiResponse<string>> DeleteGenreAsync(int id)
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ UpdateGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(int id, GenreUpdateDto genreUpdateDto)
         {
-            throw new NotImplementedException();
+            // Check if the genre exists
+            var existingGenre = await _genreRepository.GetByIdAsync(id);
+            if (existingGenre == null)
+            {
+                return ApiResponse<GenreResponseDto>.ErrorResponse("Genre not found.");
+            }
+
+            // Update the name if provided
+            if (!string.IsNullOrWhiteSpace(genreUpdateDto.Name))
+            {
+                var trimmedName = StringValidator.TrimOrEmpty(genreUpdateDto.Name);
+                if (trimmedName != existingGenre.Name)
+                {
+                    var genreWithSameName = await _genreRepository.GetGenreByName(trimmedName);
+                    if (genreWithSameName != null)
+                    {
+                        return ApiResponse<GenreResponseDto>.ErrorResponse("Genre with the same name already exists.");
+                    }
+                    existingGenre.Name = trimmedName;
+                }
+            }
+
+            // Save the updated genre
+            await _genreRepository.UpdateAsync(existingGenre);
+
+            var genreDto = new GenreResponseDto
+            {
+                Id = existingGenre.Id,
+                Name = existingGenre.Name,
+            };
+
+            return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre updated successfully.");
         }
 
-        public Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(int id, GenreUpdateDto genreUpdateDto)
+        public Task<ApiResponse<string>> DeleteGenreAsync(int id)
         {
             throw new NotImplementedException();
         }
