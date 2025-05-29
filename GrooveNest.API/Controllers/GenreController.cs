@@ -40,5 +40,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetGenreByIdAsync(int id)
+        {
+            var response = await _genreService.GetGenreByIdAsync(id);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
