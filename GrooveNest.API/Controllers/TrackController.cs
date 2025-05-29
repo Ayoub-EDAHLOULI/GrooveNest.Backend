@@ -106,5 +106,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByArtistNameAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
+
+        [HttpGet("artist/name")]
+        public async Task<IActionResult> GetTracksByArtistNameAsync([FromForm] string artistName)
+        {
+            var response = await _trackService.GetTracksByArtistNameAsync(artistName);
+            if (response == null || !response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
