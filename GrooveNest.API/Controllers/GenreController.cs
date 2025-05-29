@@ -73,5 +73,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------- //
+        // ------------------------ UpdateGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------- // 
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateGenreAsync(int id, [FromBody] GenreUpdateDto genreUpdateDto)
+        {
+            var response = await _genreService.UpdateGenreAsync(id, genreUpdateDto);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
