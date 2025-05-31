@@ -123,9 +123,22 @@ namespace GrooveNest.Service.Services
             return ApiResponse<List<TrackResponseDto>>.SuccessResponse(trackResponseDtos, "Tracks retrieved successfully");
         }
 
-        public Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
+
+        // ------------------------------------------------------------------------------ //
+        // ------------------------ DeleteTrackGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------ //
+
+        public async Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
         {
-            throw new NotImplementedException();
+            // Check if the track genre exists
+            var trackGenre = await _trackGenreRepository.GetByIdAsync(trackId, genreId);
+            if (trackGenre == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Track genre not found");
+            }
+            // Delete the track genre
+            await _trackGenreRepository.DeleteAsync(trackGenre);
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Track genre deleted successfully");
         }
     }
 }
