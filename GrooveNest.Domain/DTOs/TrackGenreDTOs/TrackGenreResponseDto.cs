@@ -3,7 +3,7 @@
     public class TrackGenreResponseDto
     {
         public Guid TrackId { get; set; }
-        public int GenreId { get; set; }
+        public Guid GenreId { get; set; }
         public string? TrackName { get; set; }
         public string? GenreName { get; set; }
         public string? ArtistName { get; set; }

@@ -3,6 +3,6 @@
     public class TrackGenreCreateDto
     {
         public Guid TrackId { get; set; }
-        public int GenreId { get; set; }
+        public Guid GenreId { get; set; }
     }
 }

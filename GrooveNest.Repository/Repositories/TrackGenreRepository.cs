@@ -27,12 +27,12 @@ namespace GrooveNest.Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<TrackGenre?> GetByIdAsync(Guid trackId)
+        public async Task<TrackGenre?> GetByIdAsync(Guid trackId, Guid genreId)
         {
             return await context.TrackGenres
                 .Include(tg => tg.Track)
                 .Include(tg => tg.Genre)
-                .FirstOrDefaultAsync(tg => tg.TrackId == trackId);
+                .FirstOrDefaultAsync(tg => tg.TrackId == trackId && tg.GenreId == genreId);
         }
 
         public async Task<List<Genre>> GetGenresByTrackIdAsync(Guid trackId)

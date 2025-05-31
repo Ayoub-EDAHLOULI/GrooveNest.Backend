@@ -5,7 +5,7 @@ namespace GrooveNest.Repository.Interfaces
     public interface ITrackGenreRepository
     {
         Task<IEnumerable<TrackGenre>> GetAllAsync();
-        Task<TrackGenre?> GetByIdAsync(Guid trackId);
+        Task<TrackGenre?> GetByIdAsync(Guid trackId, Guid genreId);
         Task AddAsync(TrackGenre entity);
         Task DeleteAsync(TrackGenre entity);
         Task<List<Genre>> GetGenresByTrackIdAsync(Guid trackId);

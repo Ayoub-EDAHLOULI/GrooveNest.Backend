@@ -72,7 +72,7 @@ namespace GrooveNest.Service.Services
         // -------------------------------------------------------------------------- //
         // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
         // -------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<GenreResponseDto>> GetGenreByIdAsync(int id)
+        public async Task<ApiResponse<GenreResponseDto>> GetGenreByIdAsync(Guid id)
         {
             var genre = await _genreRepository.GetByIdAsync(id);
             if (genre == null)
@@ -122,7 +122,7 @@ namespace GrooveNest.Service.Services
         // ------------------------------------------------------------------------- //
         // ------------------------ UpdateGenreAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(int id, GenreUpdateDto genreUpdateDto)
+        public async Task<ApiResponse<GenreResponseDto>> UpdateGenreAsync(Guid id, GenreUpdateDto genreUpdateDto)
         {
             // Check if the genre exists
             var existingGenre = await _genreRepository.GetByIdAsync(id);
@@ -162,7 +162,7 @@ namespace GrooveNest.Service.Services
         // ------------------------------------------------------------------------- //
         // ------------------------ DeleteGenreAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<string>> DeleteGenreAsync(int id)
+        public async Task<ApiResponse<string>> DeleteGenreAsync(Guid id)
         {
             // Check if the genre exists
             var existingGenre = await _genreRepository.GetByIdAsync(id);

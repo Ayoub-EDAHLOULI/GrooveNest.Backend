@@ -7,9 +7,8 @@ namespace GrooveNest.Service.Interfaces
 {
     public interface ITrackGenreService
     {
-        Task<ApiResponse<List<TrackGenreResponseDto>>> GetAllTrackGenresAsync();
         Task<ApiResponse<TrackGenreResponseDto>> GetTrackGenreByIdAsync(Guid trackId);
-        Task<ApiResponse<TrackGenreResponseDto>> AddTrackGenreAsync(TrackGenreCreateDto trackGenreCreateDto);
+        Task<ApiResponse<TrackGenreResponseDto>> CreateTrackGenreAsync(TrackGenreCreateDto trackGenreCreateDto);
         Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId);
         Task<ApiResponse<List<GenreResponseDto>>> GetGenresByTrackIdAsync(Guid trackId);
         Task<ApiResponse<List<TrackResponseDto>>> GetTracksByGenreIdAsync(Guid genreId);
