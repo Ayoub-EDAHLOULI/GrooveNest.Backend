@@ -58,5 +58,20 @@ namespace GrooveNest.API.Controllers
             return Ok(response.Data);
         }
 
+
+        // ------------------------------------------------------------------------------ //
+        // ------------------------ DeleteTrackGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------ //
+
+        [HttpDelete("{trackId}/{genreId}")]
+        public async Task<IActionResult> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
+        {
+            var response = await _trackGenreService.DeleteTrackGenreAsync(trackId, genreId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response.Data);
+        }
     }
 }
