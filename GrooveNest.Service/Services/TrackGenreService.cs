@@ -91,9 +91,36 @@ namespace GrooveNest.Service.Services
             return ApiResponse<List<GenreResponseDto>>.SuccessResponse(genreResponseDtos, "Genres retrieved successfully");
         }
 
-        public Task<ApiResponse<List<TrackResponseDto>>> GetTracksByGenreIdAsync(Guid genreId)
+
+        // -------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByGenreIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<List<TrackResponseDto>>> GetTracksByGenreIdAsync(Guid genreId)
         {
-            throw new NotImplementedException();
+            // Check if the genre exists
+            var genre = await _genreRepository.GetByIdAsync(genreId);
+            if (genre == null)
+            {
+                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("Genre not found");
+            }
+            // Get the tracks associated with the genre
+            var tracks = await _trackGenreRepository.GetTracksByGenreIdAsync(genreId);
+            if (tracks == null || tracks.Count == 0)
+            {
+                return ApiResponse<List<TrackResponseDto>>.ErrorResponse("No tracks found for this genre");
+            }
+            // Map to response DTOs
+            var trackResponseDtos = tracks.Select(t => new TrackResponseDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                DurationSec = t.DurationSec,
+                AudioUrl = t.AudioUrl,
+                TrackNumber = t.TrackNumber,
+                ArtistName = t.Artist?.Name ?? "Unknown Artist",
+                AlbumTitle = t.Album?.Title ?? "Unknown Album",
+            }).ToList();
+            return ApiResponse<List<TrackResponseDto>>.SuccessResponse(trackResponseDtos, "Tracks retrieved successfully");
         }
 
         public Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
