@@ -15,9 +15,9 @@ namespace GrooveNest.Service.Services
         private readonly IGenreRepository _genreRepository = genreRepository;
 
 
-        // ---------------------------------------------------------------------------- //
-        // ------------------------ CreateUserRoleAsync METHODS ----------------------- //
-        // ---------------------------------------------------------------------------- //
+        // ------------------------------------------------------------------------------ //
+        // ------------------------ CreateTrackGenreAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------ //
         public async Task<ApiResponse<TrackGenreResponseDto>> CreateTrackGenreAsync(TrackGenreCreateDto trackGenreCreateDto)
         {
             // Check if the track exists
@@ -64,22 +64,39 @@ namespace GrooveNest.Service.Services
             return ApiResponse<TrackGenreResponseDto>.SuccessResponse(trackGenreResponseDto, "Track genre created successfully");
         }
 
-        public Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<ApiResponse<List<GenreResponseDto>>> GetGenresByTrackIdAsync(Guid trackId)
+        // -------------------------------------------------------------------------------- //
+        // ------------------------ GetGenresByTrackIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<List<GenreResponseDto>>> GetGenresByTrackIdAsync(Guid trackId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<TrackGenreResponseDto>> GetTrackGenreByIdAsync(Guid trackId)
-        {
-            throw new NotImplementedException();
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<List<GenreResponseDto>>.ErrorResponse("Track not found");
+            }
+            // Get the genres associated with the track
+            var genres = await _trackGenreRepository.GetGenresByTrackIdAsync(trackId);
+            if (genres == null || genres.Count == 0)
+            {
+                return ApiResponse<List<GenreResponseDto>>.ErrorResponse("No genres found for this track");
+            }
+            // Map to response DTOs
+            var genreResponseDtos = genres.Select(g => new GenreResponseDto
+            {
+                Id = g.Id,
+                Name = g.Name,
+            }).ToList();
+            return ApiResponse<List<GenreResponseDto>>.SuccessResponse(genreResponseDtos, "Genres retrieved successfully");
         }
 
         public Task<ApiResponse<List<TrackResponseDto>>> GetTracksByGenreIdAsync(Guid genreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApiResponse<string>> DeleteTrackGenreAsync(Guid trackId, Guid genreId)
         {
             throw new NotImplementedException();
         }
