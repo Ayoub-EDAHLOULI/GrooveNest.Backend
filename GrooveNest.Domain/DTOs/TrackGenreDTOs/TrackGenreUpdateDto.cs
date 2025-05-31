@@ -1,6 +1,6 @@
 ﻿namespace GrooveNest.Domain.DTOs.TrackGenreDTOs
 {
-    public class TrackUpdateDto
+    public class TrackGenreUpdateDto
     {
         public Guid? TrackId { get; set; }
         public int? GenreId { get; set; }
