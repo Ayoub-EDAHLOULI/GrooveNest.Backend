@@ -26,5 +26,21 @@ namespace GrooveNest.API.Controllers
             return Ok(response.Data);
         }
 
+
+        // -------------------------------------------------------------------------------- //
+        // ------------------------ GetGenresByTrackIdAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------------- //
+
+        [HttpGet("track/{trackId}")]
+        public async Task<IActionResult> GetGenresByTrackIdAsync(Guid trackId)
+        {
+            var response = await _trackGenreService.GetGenresByTrackIdAsync(trackId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response.Data);
+        }
+
     }
 }
