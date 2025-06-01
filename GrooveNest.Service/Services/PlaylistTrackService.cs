@@ -78,7 +78,7 @@ namespace GrooveNest.Service.Services
                 return ApiResponse<List<PlaylistTrackResponseDto>>.ErrorResponse("Playlist not found.");
             }
             // Get all tracks in the playlist
-            var tracks = await _playlistTrackRepository.GetTracksByPlaylistIdAsync(playlistId);
+            var tracks = await _playlistTrackRepository.GetTracksByPlaylistIdWithTrackAsync(playlistId);
             // Map the tracks to response DTOs
             var trackResponses = tracks.Select(pt => new PlaylistTrackResponseDto
             {
@@ -92,6 +92,11 @@ namespace GrooveNest.Service.Services
             return ApiResponse<List<PlaylistTrackResponseDto>>.SuccessResponse(trackResponses, "Tracks retrieved successfully.");
         }
 
+
+
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByPlaylistIdAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
         public Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId)
         {
             throw new NotImplementedException();

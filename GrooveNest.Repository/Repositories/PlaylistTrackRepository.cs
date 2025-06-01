@@ -13,7 +13,7 @@ namespace GrooveNest.Repository.Repositories
                 .FirstOrDefaultAsync(pt => pt.PlaylistId == playlistId && pt.TrackId == trackId);
         }
 
-        public async Task<List<PlaylistTrack>> GetTracksByPlaylistIdAsync(Guid playlistId)
+        public async Task<List<PlaylistTrack>> GetTracksByPlaylistIdWithTrackAsync(Guid playlistId)
         {
             return await _context.PlaylistTracks
                 .Include(pt => pt.Track) // Include related Track entity
