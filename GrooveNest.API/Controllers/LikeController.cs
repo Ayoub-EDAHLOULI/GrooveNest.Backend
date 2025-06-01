@@ -24,5 +24,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteLikeAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+
+        [HttpDelete("{trackId}/{userId}")]
+        public async Task<IActionResult> DeleteLikeAsync(Guid trackId, Guid userId)
+        {
+            var response = await _likeService.DeleteLikeAsync(trackId, userId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
