@@ -115,9 +115,9 @@ namespace GrooveNest.Service.Services
 
 
 
-        // --------------------------------------------------------------------------- //
-        // ------------------------ GetTrackLikesAsync METHODS ----------------------- //
-        // --------------------------------------------------------------------------- // 
+        // ------------------------------------------------------------------------------- //
+        // ------------------------ GetLikesByTrackIdAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------- // 
         public async Task<ApiResponse<object>> GetLikesByTrackIdAsync(Guid trackId)
         {
             // Check if the track exists
@@ -155,9 +155,29 @@ namespace GrooveNest.Service.Services
         }
 
 
-        public Task<ApiResponse<bool>> HasUserLikedTrackAsync(Guid trackId, Guid userId)
+
+        // ------------------------------------------------------------------------------- //
+        // ------------------------ HasUserLikedTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<bool>> HasUserLikedTrackAsync(Guid trackId, Guid userId)
         {
-            throw new NotImplementedException();
+            // Check if the user exists
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return ApiResponse<bool>.ErrorResponse("User not found.");
+            }
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<bool>.ErrorResponse("Track not found.");
+            }
+            // Check if the like exists
+            var existingLike = await _likeRepository.GetLikeByTrackAndUserAsync(trackId, userId);
+            return existingLike != null
+                ? ApiResponse<bool>.SuccessResponse(true, "User has liked the track.")
+                : ApiResponse<bool>.SuccessResponse(false, "User has not liked the track.");
         }
     }
 }
