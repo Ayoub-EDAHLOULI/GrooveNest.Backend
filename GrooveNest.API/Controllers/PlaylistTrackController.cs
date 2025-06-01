@@ -24,5 +24,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByPlaylistIdAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
+
+        [HttpGet("{playlistId}")]
+        public async Task<IActionResult> GetTracksByPlaylistIdAsync(Guid playlistId)
+        {
+            var response = await _playlistTrackService.GetTracksByPlaylistIdAsync(playlistId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
