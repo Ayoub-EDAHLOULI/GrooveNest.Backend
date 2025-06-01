@@ -97,9 +97,24 @@ namespace GrooveNest.Service.Services
         // ----------------------------------------------------------------------------------- //
         // ------------------------ GetTracksByPlaylistIdAsync METHODS ----------------------- //
         // ----------------------------------------------------------------------------------- // 
-        public Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId)
+        public async Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId)
         {
-            throw new NotImplementedException();
+            // Check if the playlist exists
+            var playlist = await _playlistRepository.GetByIdAsync(playlistId);
+            if (playlist == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Playlist not found.");
+            }
+            // Check if the track exists in the playlist
+            var existingTrack = await _playlistTrackRepository.GetByPlaylistAndTrackAsync(playlistId, trackId);
+            if (existingTrack == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Track not found in the playlist.");
+            }
+            // Remove the track from the playlist
+            await _playlistTrackRepository.DeleteAsync(existingTrack);
+            // Return a success response
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Track removed from playlist successfully.");
         }
     }
 }
