@@ -7,7 +7,6 @@ namespace GrooveNest.Service.Interfaces
     public interface IPlaylistTrackService
     {
         Task<ApiResponse<List<PlaylistTrackResponseDto>>> GetTracksByPlaylistIdAsync(Guid playlistId);
-        Task<ApiResponse<PlaylistTrackResponseDto?>> GetByPlaylistAndTrackAsync(Guid playlistId, Guid trackId);
         Task<ApiResponse<PlaylistTrackResponseDto>> AddTrackToPlaylistAsync(Guid playlistId, Guid trackId);
         Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId);
     }

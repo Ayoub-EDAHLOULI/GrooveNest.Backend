@@ -64,14 +64,32 @@ namespace GrooveNest.Service.Services
             return ApiResponse<PlaylistTrackResponseDto>.SuccessResponse(playlistTrackResponse, "Track added to playlist successfully.");
         }
 
-        public Task<ApiResponse<PlaylistTrackResponseDto?>> GetByPlaylistAndTrackAsync(Guid playlistId, Guid trackId)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<ApiResponse<List<PlaylistTrackResponseDto>>> GetTracksByPlaylistIdAsync(Guid playlistId)
+
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByPlaylistIdAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<PlaylistTrackResponseDto>>> GetTracksByPlaylistIdAsync(Guid playlistId)
         {
-            throw new NotImplementedException();
+            // Check if the playlist exists
+            var playlist = await _playlistRepository.GetByIdAsync(playlistId);
+            if (playlist == null)
+            {
+                return ApiResponse<List<PlaylistTrackResponseDto>>.ErrorResponse("Playlist not found.");
+            }
+            // Get all tracks in the playlist
+            var tracks = await _playlistTrackRepository.GetTracksByPlaylistIdAsync(playlistId);
+            // Map the tracks to response DTOs
+            var trackResponses = tracks.Select(pt => new PlaylistTrackResponseDto
+            {
+                PlaylistId = pt.PlaylistId,
+                PlaylistTitle = playlist.Name,
+                TrackId = pt.TrackId,
+                TrackTitle = pt.Track.Title,
+                TrackNumber = pt.TrackNumber
+            }).ToList();
+            // Return the list of tracks with a success response
+            return ApiResponse<List<PlaylistTrackResponseDto>>.SuccessResponse(trackResponses, "Tracks retrieved successfully.");
         }
 
         public Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId)
