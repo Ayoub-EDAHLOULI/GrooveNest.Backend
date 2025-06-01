@@ -40,5 +40,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ----------------------------------------------------------------------------------- //
+        // ------------------------ GetTracksByPlaylistIdAsync METHODS ----------------------- //
+        // ----------------------------------------------------------------------------------- // 
+
+        [HttpDelete("{playlistId}/{trackId}")]
+        public async Task<IActionResult> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId)
+        {
+            var response = await _playlistTrackService.RemoveTrackFromPlaylistAsync(playlistId, trackId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
