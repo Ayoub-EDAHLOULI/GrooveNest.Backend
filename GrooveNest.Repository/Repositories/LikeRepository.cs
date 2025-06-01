@@ -13,6 +13,15 @@ namespace GrooveNest.Repository.Repositories
                 .FirstOrDefaultAsync(l => l.TrackId == trackId && l.UserId == userId);
         }
 
+        public async Task<List<Like>> GetLikesByTrackIdAsync(Guid trackId)
+        {
+            return await _context.Likes
+                .Include(l => l.Track)
+                .Include(l => l.User)
+                .Where(l => l.TrackId == trackId)
+                .ToListAsync();
+        }
+
         public async Task<List<Like>> GetLikesByUserIdAsync(Guid userId)
         {
             return await _context.Likes

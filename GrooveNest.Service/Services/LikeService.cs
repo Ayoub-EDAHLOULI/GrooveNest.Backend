@@ -113,10 +113,47 @@ namespace GrooveNest.Service.Services
             return ApiResponse<List<LikeResponseDto>>.SuccessResponse(likeDtos, "Liked tracks retrieved successfully.");
         }
 
-        public Task<ApiResponse<object>> GetTrackLikesAsync(Guid trackId)
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ GetTrackLikesAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<object>> GetLikesByTrackIdAsync(Guid trackId)
         {
-            throw new NotImplementedException();
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<object>.ErrorResponse("Track not found.");
+            }
+
+            // Get the likes for the track
+            var likes = await _likeRepository.GetLikesByTrackIdAsync(trackId);
+            if (likes == null || likes.Count == 0)
+            {
+                return ApiResponse<object>.SuccessResponse(
+                    new { TrackId = trackId, LikesCount = 0, LikedBy = new List<object>() },
+                    "No likes found for this track."
+                );
+            }
+
+            // Map likes to a response object
+            var likeDtos = likes.Select(like => new
+            {
+                UserName = like.User?.UserName ?? "Unknown",
+            }).ToList();
+
+            return ApiResponse<object>.SuccessResponse(
+                new
+                {
+                    TrackId = trackId,
+                    LikesCount = likes.Count,
+                    LikedBy = likeDtos
+                },
+                "Likes retrieved successfully."
+            );
         }
+
 
         public Task<ApiResponse<bool>> HasUserLikedTrackAsync(Guid trackId, Guid userId)
         {

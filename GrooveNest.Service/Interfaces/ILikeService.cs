@@ -9,5 +9,6 @@ namespace GrooveNest.Service.Interfaces
         Task<ApiResponse<string>> CreateLikeAsync(Guid trackId, Guid userId);
         Task<ApiResponse<string>> DeleteLikeAsync(Guid trackId, Guid userId);
         Task<ApiResponse<bool>> HasUserLikedTrackAsync(Guid trackId, Guid userId);
+        Task<ApiResponse<object>> GetLikesByTrackIdAsync(Guid trackId);
     }
 }
