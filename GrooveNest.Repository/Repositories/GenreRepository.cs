@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrooveNest.Repository.Repositories
 {
-    public class GenreRepository(AppDbContext context) : GenericRepository<Genre, int>(context), IGenreRepository
+    public class GenreRepository(AppDbContext context) : GenericRepository<Genre, Guid>(context), IGenreRepository
     {
         public async Task<Genre?> GetGenreByName(string name)
         {
