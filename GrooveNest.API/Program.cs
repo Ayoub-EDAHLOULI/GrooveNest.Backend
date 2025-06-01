@@ -35,6 +35,7 @@ builder.Services.AddScoped<ArtistRepository>();
 builder.Services.AddScoped<TrackRepository>();
 builder.Services.AddScoped<GenreRepository>();
 builder.Services.AddScoped<TrackGenreRepository>();
+builder.Services.AddScoped<LikeRepository>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -48,6 +49,7 @@ builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
 builder.Services.AddScoped<ITrackRepository, TrackRepository>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<ITrackGenreRepository, TrackGenreRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
 
 builder.Services.AddScoped<UserService>();
@@ -61,6 +63,7 @@ builder.Services.AddScoped<ArtistService>();
 builder.Services.AddScoped<TrackService>();
 builder.Services.AddScoped<GenreService>();
 builder.Services.AddScoped<TrackGenreService>();
+builder.Services.AddScoped<LikeService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -74,6 +77,7 @@ builder.Services.AddScoped<IArtistService, ArtistService>();
 builder.Services.AddScoped<ITrackService, TrackService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<ITrackGenreService, TrackGenreService>();
+builder.Services.AddScoped<ILikeService, LikeService>();
 
 
 
