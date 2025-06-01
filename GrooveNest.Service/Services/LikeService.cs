@@ -1,4 +1,5 @@
 ﻿using GrooveNest.Domain.DTOs.LikeDTOs;
+using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
@@ -11,9 +12,42 @@ namespace GrooveNest.Service.Services
         private readonly ITrackRepository _trackRepository = trackRepository;
         private readonly ILikeRepository _likeRepository = likeRepository;
 
-        public Task<ApiResponse<string>> CreateLikeAsync(Guid trackId, Guid userId)
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ CreateLikeAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+        public async Task<ApiResponse<string>> CreateLikeAsync(Guid trackId, Guid userId)
         {
-            throw new NotImplementedException();
+            // Check if the user exists
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return ApiResponse<string>.ErrorResponse("User not found.");
+            }
+
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Track not found.");
+            }
+
+            // Check if the like already exists
+            var existingLike = await _likeRepository.GetLikeByTrackAndUserAsync(trackId, userId);
+            if (existingLike != null)
+            {
+                return ApiResponse<string>.ErrorResponse("You have already liked this track.");
+            }
+
+            // Create a new like
+            var like = new Like
+            {
+                TrackId = trackId,
+                UserId = userId,
+            };
+
+            await _likeRepository.AddAsync(like);
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Like created successfully.");
         }
 
         public Task<ApiResponse<string>> DeleteLikeAsync(Guid trackId, Guid userId)

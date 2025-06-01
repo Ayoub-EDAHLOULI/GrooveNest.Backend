@@ -4,5 +4,6 @@ namespace GrooveNest.Repository.Interfaces
 {
     public interface ILikeRepository : IGenericRepository<Like, Guid>
     {
+        Task<Like?> GetLikeByTrackAndUserAsync(Guid trackId, Guid userId);
     }
 }
