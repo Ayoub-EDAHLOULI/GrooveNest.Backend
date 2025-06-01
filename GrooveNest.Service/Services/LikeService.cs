@@ -50,11 +50,40 @@ namespace GrooveNest.Service.Services
             return ApiResponse<string>.SuccessResponse(string.Empty, "Like created successfully.");
         }
 
-        public Task<ApiResponse<string>> DeleteLikeAsync(Guid trackId, Guid userId)
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteLikeAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
+        public async Task<ApiResponse<string>> DeleteLikeAsync(Guid trackId, Guid userId)
         {
-            throw new NotImplementedException();
+            // Check if the user exists
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return ApiResponse<string>.ErrorResponse("User not found.");
+            }
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Track not found.");
+            }
+            // Check if the like exists
+            var existingLike = await _likeRepository.GetLikeByTrackAndUserAsync(trackId, userId);
+            if (existingLike == null)
+            {
+                return ApiResponse<string>.ErrorResponse("You have not liked this track.");
+            }
+            // Delete the like
+            await _likeRepository.DeleteAsync(existingLike);
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Like deleted successfully.");
         }
 
+
+
+        // ------------------------------------------------------------------------ //
+        // ------------------------ DeleteLikeAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------ // 
         public Task<ApiResponse<List<LikeResponseDto>>> GetLikedTracksByUserAsync(Guid userId)
         {
             throw new NotImplementedException();
