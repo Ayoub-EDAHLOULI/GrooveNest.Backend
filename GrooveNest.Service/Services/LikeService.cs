@@ -81,12 +81,36 @@ namespace GrooveNest.Service.Services
 
 
 
-        // ------------------------------------------------------------------------ //
-        // ------------------------ DeleteLikeAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------ // 
-        public Task<ApiResponse<List<LikeResponseDto>>> GetLikedTracksByUserAsync(Guid userId)
+        // ---------------------------------------------------------------------------------- //
+        // ------------------------ GetLikedTracksByUserAsync METHODS ----------------------- //
+        // ---------------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<LikeResponseDto>>> GetLikedTracksByUserAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            // Check if the user exists  
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return ApiResponse<List<LikeResponseDto>>.ErrorResponse("User not found.");
+            }
+
+            // Get the likes by user ID  
+            var likes = await _likeRepository.GetLikesByUserIdAsync(userId);
+            if (likes == null || likes.Count == 0)
+            {
+                return ApiResponse<List<LikeResponseDto>>.SuccessResponse([], "No liked tracks found.");
+            }
+
+            // Map likes to LikeResponseDto  
+            var likeDtos = likes.Select(like => new LikeResponseDto
+            {
+                TrackId = like.TrackId,
+                TrackTitle = like.Track?.Title ?? "Unknown",
+                UserId = like.UserId,
+                UserName = like.User?.UserName ?? "Unknown",
+                CreatedAt = like.CreatedAt
+            }).ToList();
+
+            return ApiResponse<List<LikeResponseDto>>.SuccessResponse(likeDtos, "Liked tracks retrieved successfully.");
         }
 
         public Task<ApiResponse<object>> GetTrackLikesAsync(Guid trackId)
