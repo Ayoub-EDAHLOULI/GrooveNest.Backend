@@ -6,5 +6,6 @@ namespace GrooveNest.Repository.Interfaces
     {
         Task<List<PlaylistTrack>> GetTracksByPlaylistIdAsync(Guid playlistId);
         Task<PlaylistTrack?> GetByPlaylistAndTrackAsync(Guid playlistId, Guid trackId);
+        Task<int> GetNextTrackNumberAsync(Guid playlistId);
     }
 }

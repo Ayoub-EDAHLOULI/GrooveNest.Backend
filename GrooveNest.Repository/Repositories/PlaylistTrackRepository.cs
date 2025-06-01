@@ -21,5 +21,14 @@ namespace GrooveNest.Repository.Repositories
                 .Where(pt => pt.PlaylistId == playlistId)
                 .ToListAsync();
         }
+
+        public async Task<int> GetNextTrackNumberAsync(Guid playlistId)
+        {
+            var count = await _context.PlaylistTracks
+                .Where(pt => pt.PlaylistId == playlistId)
+                .CountAsync();
+
+            return count + 1;
+        }
     }
 }

@@ -1,12 +1,14 @@
-﻿using GrooveNest.Domain.Entities;
+﻿using GrooveNest.Domain.DTOs.PlaylistTrackDTOs;
+using GrooveNest.Domain.Entities;
+using GrooveNest.Utilities;
 
 namespace GrooveNest.Service.Interfaces
 {
     public interface IPlaylistTrackService
     {
-        Task<List<PlaylistTrack>> GetTracksByPlaylistIdAsync(Guid playlistId);
-        Task<PlaylistTrack?> GetByPlaylistAndTrackAsync(Guid playlistId, Guid trackId);
-        Task<PlaylistTrack> AddTrackToPlaylistAsync(Guid playlistId, Guid trackId);
-        Task<PlaylistTrack> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId);
+        Task<ApiResponse<List<PlaylistTrackResponseDto>>> GetTracksByPlaylistIdAsync(Guid playlistId);
+        Task<ApiResponse<PlaylistTrackResponseDto?>> GetByPlaylistAndTrackAsync(Guid playlistId, Guid trackId);
+        Task<ApiResponse<PlaylistTrackResponseDto>> AddTrackToPlaylistAsync(Guid playlistId, Guid trackId);
+        Task<ApiResponse<string>> RemoveTrackFromPlaylistAsync(Guid playlistId, Guid trackId);
     }
 }
