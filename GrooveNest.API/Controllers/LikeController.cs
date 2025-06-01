@@ -72,5 +72,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------------- //
+        // ------------------------ HasUserLikedTrackAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------- // 
+
+        [HttpGet("hasLiked/{trackId}/{userId}")]
+        public async Task<IActionResult> HasUserLikedTrackAsync(Guid trackId, Guid userId)
+        {
+            var response = await _likeService.HasUserLikedTrackAsync(trackId, userId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
