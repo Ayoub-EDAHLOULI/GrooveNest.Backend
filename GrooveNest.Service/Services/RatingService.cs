@@ -55,6 +55,42 @@ namespace GrooveNest.Service.Services
             return ApiResponse<string>.SuccessResponse(string.Empty, "Rating created successfully.");
         }
 
+
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ UpdateRatingAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<RatingResponseDto>> UpdateRatingAsync(int ratingId, RatingUpdateDto ratingUpdateDto)
+        {
+            // Check if the rating exists
+            var existingRating = await _ratingRepository.GetByIdAsync(ratingId);
+            if (existingRating == null)
+            {
+                return ApiResponse<RatingResponseDto>.ErrorResponse("Rating not found.");
+            }
+
+            // Update the rating properties
+            existingRating.Stars = ratingUpdateDto.Stars;
+
+            // Save the updated rating to the repository
+            await _ratingRepository.UpdateAsync(existingRating);
+
+            // Map the updated rating to a response DTO
+            var responseDto = new RatingResponseDto
+            {
+                Id = existingRating.Id,
+                Stars = existingRating.Stars,
+                CreatedAt = existingRating.CreatedAt,
+                TrackId = existingRating.TrackId,
+                UserId = existingRating.UserId
+            };
+
+            // Return a success response with the updated rating
+            return ApiResponse<RatingResponseDto>.SuccessResponse(responseDto, "Rating updated successfully.");
+        }
+
+
+
         public Task<ApiResponse<bool>> DeleteRatingAsync(int ratingId)
         {
             throw new NotImplementedException();
@@ -65,9 +101,6 @@ namespace GrooveNest.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<RatingResponseDto>> UpdateRatingAsync(int ratingId, RatingUpdateDto ratingUpdateDto)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
