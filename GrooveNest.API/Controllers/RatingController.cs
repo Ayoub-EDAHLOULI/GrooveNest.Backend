@@ -26,5 +26,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ UpdateRatingAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRatingAsync(int id, [FromBody] RatingUpdateDto ratingUpdateDto)
+        {
+            var response = await _ratingService.UpdateRatingAsync(id, ratingUpdateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
