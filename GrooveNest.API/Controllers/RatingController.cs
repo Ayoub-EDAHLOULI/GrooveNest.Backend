@@ -42,5 +42,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // --------------------------------------------------------------------------------------- //
+        // ------------------------ GetAverageRatingByTrackIdAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------------------- // 
+
+        [HttpGet("average/{trackId}")]
+        public async Task<IActionResult> GetAverageRatingByTrackIdAsync(Guid trackId)
+        {
+            var response = await _ratingService.GetAverageRatingByTrackIdAsync(trackId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
