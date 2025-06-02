@@ -115,9 +115,21 @@ namespace GrooveNest.Service.Services
 
 
 
-        public Task<ApiResponse<bool>> DeleteRatingAsync(int ratingId)
+        // -------------------------------------------------------------------------- //
+        // ------------------------ DeleteRatingAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<bool>> DeleteRatingAsync(int ratingId)
         {
-            throw new NotImplementedException();
+            // Check if the rating exists
+            var existingRating = await _ratingRepository.GetByIdAsync(ratingId);
+            if (existingRating == null)
+            {
+                return ApiResponse<bool>.ErrorResponse("Rating not found.");
+            }
+            // Delete the rating from the repository
+            await _ratingRepository.DeleteAsync(existingRating);
+            // Return a success response indicating the rating was deleted
+            return ApiResponse<bool>.SuccessResponse(true, "Rating deleted successfully.");
         }
     }
 }
