@@ -91,16 +91,33 @@ namespace GrooveNest.Service.Services
 
 
 
+        // --------------------------------------------------------------------------------------- //
+        // ------------------------ GetAverageRatingByTrackIdAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<double>> GetAverageRatingByTrackIdAsync(Guid trackId)
+        {
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<double>.ErrorResponse("Track not found.");
+            }
+            // Get the average rating for the track
+            var averageRating = await _ratingRepository.GetAverageRatingByTrackIdAsync(trackId);
+            if (averageRating == 0)
+            {
+                return ApiResponse<double>.SuccessResponse(averageRating, "No ratings found for this track.");
+            }
+
+            // Return a success response with the average rating
+            return ApiResponse<double>.SuccessResponse(averageRating, "Average rating retrieved successfully.");
+        }
+
+
+
         public Task<ApiResponse<bool>> DeleteRatingAsync(int ratingId)
         {
             throw new NotImplementedException();
         }
-
-        public Task<double> GetAverageRatingByTrackIdAsync(Guid trackId)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 }
