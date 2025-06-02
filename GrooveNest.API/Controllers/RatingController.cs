@@ -58,5 +58,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // -------------------------------------------------------------------------- //
+        // ------------------------ DeleteRatingAsync METHODS ----------------------- //
+        // -------------------------------------------------------------------------- // 
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRatingAsync(int id)
+        {
+            var response = await _ratingService.DeleteRatingAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
