@@ -1,6 +1,5 @@
 ﻿using GrooveNest.Domain.DTOs.RatingDTOs;
 using GrooveNest.Service.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrooveNest.API.Controllers
