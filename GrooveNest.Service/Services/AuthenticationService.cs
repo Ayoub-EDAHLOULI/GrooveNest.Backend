@@ -2,7 +2,6 @@
 using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
-using GrooveNest.Repository.Repositories;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
 
