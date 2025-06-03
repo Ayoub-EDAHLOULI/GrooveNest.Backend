@@ -57,17 +57,55 @@ namespace GrooveNest.Service.Services
 
         }
 
-        public Task<ApiResponse<bool>> DeleteCommentAsync(Guid commentId)
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ UpdateCommentAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<string>> UpdateCommentAsync(int id, CommentUpdateDto commentUpdateDto)
         {
-            throw new NotImplementedException();
+            // Find the comment by id
+            var comment = await _commentRepository.GetByIdAsync(id);
+            if (comment == null)
+            {
+                return ApiResponse<string>.ErrorResponse("Comment not found.");
+            }
+
+            // Validate new content if provided
+            if (!StringValidator.IsNullOrWhiteSpace(commentUpdateDto.Content))
+            {
+                comment.Content = StringValidator.TrimOrEmpty(commentUpdateDto.Content);
+            }
+
+            await _commentRepository.UpdateAsync(comment);
+
+            return ApiResponse<string>.SuccessResponse(string.Empty, "Comment updated successfully.");
         }
 
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ DeleteCommentAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<bool>> DeleteCommentAsync(int commentId)
+        {
+            // Find the comment by id
+            var comment = await _commentRepository.GetByIdAsync(commentId);
+            if (comment == null)
+            {
+                return ApiResponse<bool>.ErrorResponse("Comment not found.");
+            }
+
+            await _commentRepository.DeleteAsync(comment);
+            return ApiResponse<bool>.SuccessResponse(true, "Comment deleted successfully.");
+        }
+
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ DeleteCommentAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
         public Task<ApiResponse<List<CommentResponseDto>>> GetCommentsByTrackId(Guid trackId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApiResponse<string>> UpdateCommentAsync(CommentUpdateDto commentUpdateDto)
         {
             throw new NotImplementedException();
         }
