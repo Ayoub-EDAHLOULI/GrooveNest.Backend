@@ -25,5 +25,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ UpdateCommentAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCommentAsync(int id, [FromBody] CommentUpdateDto commentUpdateDto)
+        {
+            var response = await _commentService.UpdateCommentAsync(id, commentUpdateDto);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
