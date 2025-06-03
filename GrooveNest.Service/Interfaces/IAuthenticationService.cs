@@ -3,9 +3,9 @@ using GrooveNest.Utilities;
 
 namespace GrooveNest.Service.Interfaces
 {
-    public interface IAuthenticationService<TLoginDto, TResponseDto>
+    public interface IAuthenticationService<TLoginDto, TRespoUserAuthResponseDtonseDto>
     {
-        Task<ApiResponse<TResponseDto>> LoginAsync(TLoginDto loginDto);
-        Task<ApiResponse<TResponseDto>> RegisterAsync(UserCreateDto registerDto);
+        Task<ApiResponse<UserAuthResponseDto>> LoginAsync(TLoginDto loginDto);
+        Task<ApiResponse<UserAuthResponseDto>> RegisterAsync(UserCreateDto registerDto);
     }
 }

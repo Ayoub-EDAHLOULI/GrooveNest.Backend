@@ -98,6 +98,7 @@ builder.Services.AddScoped<PlaylistTrackService>();
 builder.Services.AddScoped<RatingService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<JwtTokenService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
