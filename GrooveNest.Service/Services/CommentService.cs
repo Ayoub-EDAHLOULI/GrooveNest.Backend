@@ -104,7 +104,7 @@ namespace GrooveNest.Service.Services
         // ----------------------------------------------------------------------------- //
         // ------------------------ GetCommentsByTrackId METHODS ----------------------- //
         // ----------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<List<CommentResponseDto>>> GetCommentsByTrackId(Guid trackId)
+        public async Task<ApiResponse<List<CommentResponseDto>>> GetCommentsByTrackIdAsync(Guid trackId)
         {
             // Check if the track exists
             var track = await _trackRepository.GetByIdAsync(trackId);

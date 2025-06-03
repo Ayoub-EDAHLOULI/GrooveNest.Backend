@@ -57,5 +57,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetCommentsByTrackId METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+
+        [HttpGet("track/{trackId}")]
+        public async Task<IActionResult> GetCommentsByTrackId(Guid trackId)
+        {
+            var response = await _commentService.GetCommentsByTrackIdAsync(trackId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
