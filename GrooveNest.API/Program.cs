@@ -38,6 +38,7 @@ builder.Services.AddScoped<TrackGenreRepository>();
 builder.Services.AddScoped<LikeRepository>();
 builder.Services.AddScoped<PlaylistTrackRepository>();
 builder.Services.AddScoped<RatingRepository>();
+builder.Services.AddScoped<CommentRepository>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -54,6 +55,7 @@ builder.Services.AddScoped<ITrackGenreRepository, TrackGenreRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddScoped<IPlaylistTrackRepository, PlaylistTrackRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 
 builder.Services.AddScoped<UserService>();
@@ -70,6 +72,7 @@ builder.Services.AddScoped<TrackGenreService>();
 builder.Services.AddScoped<LikeService>();
 builder.Services.AddScoped<PlaylistTrackService>();
 builder.Services.AddScoped<RatingService>();
+builder.Services.AddScoped<CommentService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -86,6 +89,7 @@ builder.Services.AddScoped<ITrackGenreService, TrackGenreService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IPlaylistTrackService, PlaylistTrackService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 
 
 

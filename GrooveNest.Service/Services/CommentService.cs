@@ -1,5 +1,4 @@
 ﻿using GrooveNest.Domain.DTOs.CommentDTOs;
-using GrooveNest.Domain.DTOs.RatingDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
