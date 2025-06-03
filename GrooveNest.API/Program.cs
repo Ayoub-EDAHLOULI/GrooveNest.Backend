@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using GrooveNest.Domain.DTOs.UserDTOs;
+using GrooveNest.Domain.DTOs.LoginDTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +97,7 @@ builder.Services.AddScoped<LikeService>();
 builder.Services.AddScoped<PlaylistTrackService>();
 builder.Services.AddScoped<RatingService>();
 builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<AuthenticationService>();
 
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -112,6 +115,7 @@ builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IPlaylistTrackService, PlaylistTrackService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IAuthenticationService<LoginDto, UserAuthResponseDto>, AuthenticationService>();
 
 
 
