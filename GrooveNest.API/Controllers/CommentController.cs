@@ -41,5 +41,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // --------------------------------------------------------------------------- //
+        // ------------------------ DeleteCommentAsync METHODS ----------------------- //
+        // --------------------------------------------------------------------------- // 
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCommentAsync(int id)
+        {
+            var response = await _commentService.DeleteCommentAsync(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
