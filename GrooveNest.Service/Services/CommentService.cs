@@ -102,12 +102,42 @@ namespace GrooveNest.Service.Services
 
 
 
-        // --------------------------------------------------------------------------- //
-        // ------------------------ DeleteCommentAsync METHODS ----------------------- //
-        // --------------------------------------------------------------------------- // 
-        public Task<ApiResponse<List<CommentResponseDto>>> GetCommentsByTrackId(Guid trackId)
+        // ----------------------------------------------------------------------------- //
+        // ------------------------ GetCommentsByTrackId METHODS ----------------------- //
+        // ----------------------------------------------------------------------------- // 
+        public async Task<ApiResponse<List<CommentResponseDto>>> GetCommentsByTrackId(Guid trackId)
         {
-            throw new NotImplementedException();
+            // Check if the track exists
+            var track = await _trackRepository.GetByIdAsync(trackId);
+            if (track == null)
+            {
+                return ApiResponse<List<CommentResponseDto>>.ErrorResponse("Track not found.");
+            }
+
+            // Get all comments for the track
+            var comments = await _commentRepository.GetCommentsByTrackIdAsync(trackId);
+
+            // Map comments to DTOs
+            var commentDtos = new List<CommentResponseDto>();
+            foreach (var comment in comments)
+            {
+                // Fetch user for each comment (could be optimized with includes or batch fetching)
+                var user = await _userRepository.GetByIdAsync(comment.UserId);
+
+                commentDtos.Add(new CommentResponseDto
+                {
+                    Id = comment.Id,
+                    Content = comment.Content,
+                    CreatedAt = comment.CreatedAt,
+                    TrackId = comment.TrackId,
+                    UserId = comment.UserId,
+                    UserName = user?.UserName,
+                    TrackTitle = track.Title
+                });
+            }
+
+            return ApiResponse<List<CommentResponseDto>>.SuccessResponse(commentDtos, "Comments retrieved successfully.");
         }
+
     }
 }
