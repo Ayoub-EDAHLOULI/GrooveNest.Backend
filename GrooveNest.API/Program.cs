@@ -1,4 +1,4 @@
-using GrooveNest.Domain.Entities;
+﻿using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Data;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Repository.Repositories;
@@ -23,6 +23,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// ✅ Add CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policyBuilder =>
+    {
+        policyBuilder
+            .WithOrigins("http://localhost:5173", "http://192.168.100.209:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 
 // Add JWT Authentication
@@ -139,6 +153,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// ✅ CORS
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
