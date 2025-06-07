@@ -47,7 +47,7 @@ namespace GrooveNest.Service.Services
         // ---------------------------------------------------------------------------------- //
         // ------------------------ GetAllPaginatedUsersAsync METHODS ----------------------- //
         // ---------------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<object>> GetAllPaginatedUsersAsync(int page = 1, int pageSize = 10, string searchQuery = "", string searchTerm = "")
+        public async Task<ApiResponse<object>> GetAllPaginatedUsersAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
             var users = await _userRepository.GetAllWithRolesAsync();
 
@@ -63,19 +63,6 @@ namespace GrooveNest.Service.Services
                     .Where(u => u.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
                                 u.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-            }
-
-            // Filter by status if provided
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                if (Enum.TryParse<UserStatus>(searchTerm, true, out var userStatus))
-                {
-                    users = users.Where(u => u.Status == userStatus).ToList();
-                }
-                else
-                {
-                    return ApiResponse<object>.ErrorResponse("Invalid status provided");
-                }
             }
 
             var totalUsers = users.Count();

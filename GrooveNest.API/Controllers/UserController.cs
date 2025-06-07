@@ -32,9 +32,9 @@ namespace GrooveNest.API.Controllers
         // ---------------------------------------------------------------------------------- // 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPaginatedUsersAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "", [FromQuery] string status = "")
+        public async Task<IActionResult> GetAllPaginatedUsersAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "")
         {
-            var response = await _userService.GetAllPaginatedUsersAsync(page, pageSize, search, status);
+            var response = await _userService.GetAllPaginatedUsersAsync(page, pageSize, search);
             if (!response.Success)
             {
                 return NotFound(response);
