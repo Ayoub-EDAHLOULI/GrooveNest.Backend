@@ -7,6 +7,14 @@ namespace GrooveNest.Repository.Repositories
 {
     public class UserRepository(AppDbContext context) : GenericRepository<User, Guid>(context), IUserRepository
     {
+        public async Task<List<User>> GetAllWithRolesAsync()
+        {
+            return await _context.Users
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .ToListAsync();
+        }
+
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);

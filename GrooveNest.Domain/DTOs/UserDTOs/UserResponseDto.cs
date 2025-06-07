@@ -9,5 +9,6 @@ namespace GrooveNest.Domain.DTOs.UserDTOs
         public string Email { get; set; } = null!;
         public UserStatus Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public List<string> Roles { get; set; } = new();
     }
 }

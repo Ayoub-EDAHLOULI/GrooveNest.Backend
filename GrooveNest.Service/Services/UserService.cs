@@ -48,22 +48,25 @@ namespace GrooveNest.Service.Services
         // ---------------------------------------------------------------------------------- // 
         public async Task<ApiResponse<object>> GetAllPaginatedUsersAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepository.GetAllWithRolesAsync();
 
-            // Validate if users is null or empty
             if (users == null || !users.Any())
             {
                 return ApiResponse<object>.ErrorResponse("No users found");
             }
 
-            // Filter users based on search query
-            if (!string.IsNullOrEmpty(searchQuery))
+            // Filter
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                users = [.. users.Where(user => user.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                                            user.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))];
+                users = users
+                    .Where(u => u.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                                u.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
 
-            // Paginate users logic
+            var totalUsers = users.Count();
+
+            // Pagination
             var paginatedUsers = users
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -72,23 +75,21 @@ namespace GrooveNest.Service.Services
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
+                    CreatedAt = user.CreatedAt,
                     Status = user.Status,
-                    CreatedAt = user.CreatedAt
+                    Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList()
                 })
                 .ToList();
-
-            // Calculate total pages
-            var totalUsers = users.Count();
 
             var response = new
             {
                 PaginatedUsers = paginatedUsers,
-                TotalUsers = totalUsers,
+                TotalUsers = totalUsers
             };
 
-            // Return success response
             return ApiResponse<object>.SuccessResponse(response, "Users retrieved successfully");
         }
+
 
 
         // ------------------------------------------------------------------------- //
