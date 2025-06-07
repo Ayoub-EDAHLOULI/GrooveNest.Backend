@@ -34,6 +34,7 @@ namespace GrooveNest.Service.Services
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
+                Status = user.Status,
                 CreatedAt = user.CreatedAt
             }).ToList();
 
@@ -71,6 +72,7 @@ namespace GrooveNest.Service.Services
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
+                    Status = user.Status,
                     CreatedAt = user.CreatedAt
                 })
                 .ToList();
@@ -106,6 +108,7 @@ namespace GrooveNest.Service.Services
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
+                Status = user.Status,
                 CreatedAt = user.CreatedAt
             };
             // Return success response
@@ -181,6 +184,7 @@ namespace GrooveNest.Service.Services
                 Id = newUser.Id,
                 UserName = newUser.UserName,
                 Email = newUser.Email,
+                Status = newUser.Status,
                 CreatedAt = newUser.CreatedAt
             };
 
@@ -255,6 +259,12 @@ namespace GrooveNest.Service.Services
                 user.Password = HashPassword(trimmedPassword);
             }
 
+            // Update user status if provided
+            if (userUpdateDto.Status.HasValue)
+            {
+                user.Status = userUpdateDto.Status.Value;
+            }
+
             // Update user in the database
             await _userRepository.UpdateAsync(user);
 
@@ -264,6 +274,7 @@ namespace GrooveNest.Service.Services
                 Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
+                Status = user.Status,
                 CreatedAt = user.CreatedAt
             };
 
