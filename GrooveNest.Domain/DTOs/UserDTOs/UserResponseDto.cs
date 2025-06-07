@@ -1,4 +1,6 @@
-﻿namespace GrooveNest.Domain.DTOs.UserDTOs
+﻿using GrooveNest.Domain.Enums;
+
+namespace GrooveNest.Domain.DTOs.UserDTOs
 {
     public class UserResponseDto
     {
