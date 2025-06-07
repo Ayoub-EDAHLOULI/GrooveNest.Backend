@@ -27,22 +27,6 @@ namespace GrooveNest.API.Controllers
         }
 
 
-        // ----------------------------------------------------------------------------------- //
-        // ------------------------ GetAllPaginatedGenresAsync METHODS ----------------------- //
-        // ----------------------------------------------------------------------------------- // 
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllPaginatedGenresAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "")
-        {
-            var response = await _genreService.GetAllPaginatedGenresAsync(page, pageSize, search);
-            if (!response.Success)
-            {
-                return NotFound(response);
-            }
-            return Ok(response);
-        }
-
-
         // -------------------------------------------------------------------------- //
         // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
         // -------------------------------------------------------------------------- // 
