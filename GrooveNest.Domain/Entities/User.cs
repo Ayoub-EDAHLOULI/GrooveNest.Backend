@@ -1,4 +1,6 @@
-﻿namespace GrooveNest.Domain.Entities
+﻿using GrooveNest.Domain.Enums;
+
+namespace GrooveNest.Domain.Entities
 {
     /// <summary>
     /// Core account record for listeners, artists, and admins.
@@ -10,6 +12,7 @@
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public UserStatus Status { get; set; } = UserStatus.Active;
 
 
         // --------------------------------------------------- //
