@@ -130,18 +130,18 @@ namespace GrooveNest.Service.Services
                 return validationResponse;
             }
 
-            // Check if email already exists
-            var existingUser = await _userRepository.GetByEmailAsync(StringValidator.TrimOrEmpty(userCreateDto.Email));
-            if (existingUser != null)
-            {
-                return ApiResponse<UserResponseDto>.ErrorResponse("Email already exists");
-            }
-
             // Check if username already exists
             var existingUserName = await _userRepository.GetByUserNameAsync(StringValidator.TrimOrEmpty(userCreateDto.UserName));
             if (existingUserName != null)
             {
                 return ApiResponse<UserResponseDto>.ErrorResponse("Username already exists");
+            }
+
+            // Check if email already exists
+            var existingUser = await _userRepository.GetByEmailAsync(StringValidator.TrimOrEmpty(userCreateDto.Email));
+            if (existingUser != null)
+            {
+                return ApiResponse<UserResponseDto>.ErrorResponse("Email already exists");
             }
 
             // Bcrypt password
@@ -154,6 +154,7 @@ namespace GrooveNest.Service.Services
                 UserName = StringValidator.TrimOrEmpty(userCreateDto.UserName),
                 Email = StringValidator.TrimOrEmpty(userCreateDto.Email),
                 Password = hashedPassword,
+                Status = userCreateDto.Status,
                 CreatedAt = DateTime.UtcNow
             };
 
