@@ -14,7 +14,6 @@ namespace GrooveNest.Repository.Repositories
                     .ThenInclude(ur => ur.Role)
                 .ToListAsync();
         }
-
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -23,7 +22,6 @@ namespace GrooveNest.Repository.Repositories
         {
             return _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
-
         public async Task<User?> GetUserNameByIdAsync(Guid id)
         {
             return await _context.Users
