@@ -9,8 +9,14 @@ namespace GrooveNest.Repository.Repositories
     {
         public async Task<Genre?> GetGenreByName(string name)
         {
-            return await _context.Genres
-                .FirstOrDefaultAsync(g => g.Name.ToLower() == name.ToLower());
+            return await _context.Genres.FirstOrDefaultAsync(g => g.Name == name);
+        }
+
+        public Task<Genre?> GetGenresWithTracksCounts()
+        {
+            return _context.Genres
+                .Include(g => g.TrackGenres)
+                .FirstOrDefaultAsync();
         }
     }
 }

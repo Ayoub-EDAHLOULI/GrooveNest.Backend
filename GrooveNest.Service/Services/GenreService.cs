@@ -26,6 +26,7 @@ namespace GrooveNest.Service.Services
             {
                 Id = g.Id,
                 Name = g.Name,
+                TrackCount = g.TrackGenres?.Count ?? 0
             }).ToList();
 
             return ApiResponse<List<GenreResponseDto>>.SuccessResponse(genreDtos, "Genres retrieved successfully.");
