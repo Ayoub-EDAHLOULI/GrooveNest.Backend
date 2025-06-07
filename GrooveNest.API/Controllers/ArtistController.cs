@@ -64,7 +64,8 @@ namespace GrooveNest.API.Controllers
         // -------------------------------------------------------------------------- // 
 
         [HttpPost]
-        public async Task<IActionResult> CreateArtistAsync([FromBody] ArtistCreateDto artistCreateDto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateArtistAsync([FromForm] ArtistCreateDto artistCreateDto)
         {
             var response = await _artistService.CreateArtistAsync(artistCreateDto);
             if (!response.Success)

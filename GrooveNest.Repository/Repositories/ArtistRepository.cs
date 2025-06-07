@@ -10,7 +10,7 @@ namespace GrooveNest.Repository.Repositories
         public async Task<Artist?> GetArtistByName(string artistName)
         {
             return await _context.Artists
-                .FirstOrDefaultAsync(a => a.Name.Equals(artistName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(a => a.Name.ToLower() == artistName.ToLower());
         }
     }
 }

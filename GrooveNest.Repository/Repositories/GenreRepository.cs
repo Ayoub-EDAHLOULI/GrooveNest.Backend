@@ -10,7 +10,7 @@ namespace GrooveNest.Repository.Repositories
         public async Task<Genre?> GetGenreByName(string name)
         {
             return await _context.Genres
-                .FirstOrDefaultAsync(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(g => g.Name.ToLower() == name.ToLower());
         }
     }
 }

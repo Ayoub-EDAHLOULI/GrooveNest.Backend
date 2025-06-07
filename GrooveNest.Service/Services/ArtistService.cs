@@ -34,7 +34,8 @@ namespace GrooveNest.Service.Services
                     Id = a.Id,
                     Name = a.Name,
                     Bio = a.Bio,
-                    UserName = user?.UserName ?? "Unknown"
+                    UserName = user?.UserName ?? "Unknown",
+                    ProfilePictureUrl = a.AvatarUrl
                 };
             }));
 
@@ -121,7 +122,10 @@ namespace GrooveNest.Service.Services
                 return ApiResponse<ArtistResponseDto>.ErrorResponse("Artist name is required.");
             }
 
-            var existingArtist = await _artistRepository.GetArtistByName(artistCreateDto.Name);
+            var trimmedName = StringValidator.TrimOrEmpty(artistCreateDto.Name);
+            var trimmedbio = StringValidator.TrimOrEmpty(artistCreateDto.Bio);
+
+            var existingArtist = await _artistRepository.GetArtistByName(trimmedName);
             if (existingArtist != null)
             {
                 return ApiResponse<ArtistResponseDto>.ErrorResponse("An artist with this name already exists.");
@@ -151,8 +155,8 @@ namespace GrooveNest.Service.Services
             var artist = new Artist
             {
                 Id = Guid.NewGuid(),
-                Name = artistCreateDto.Name,
-                Bio = artistCreateDto.Bio,
+                Name = trimmedName,
+                Bio = trimmedbio,
                 AvatarUrl = avatarUrl,
                 UserId = artistCreateDto.UserId
             };
