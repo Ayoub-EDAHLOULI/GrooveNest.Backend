@@ -31,7 +31,7 @@ namespace GrooveNest.API.Controllers
         // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
         // -------------------------------------------------------------------------- // 
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetGenreByIdAsync(Guid id)
         {
             var response = await _genreService.GetGenreByIdAsync(id);
@@ -63,7 +63,7 @@ namespace GrooveNest.API.Controllers
         // ------------------------ UpdateGenreAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGenreAsync(Guid id, [FromBody] GenreUpdateDto genreUpdateDto)
         {
             var response = await _genreService.UpdateGenreAsync(id, genreUpdateDto);
@@ -79,7 +79,7 @@ namespace GrooveNest.API.Controllers
         // ------------------------ DeleteGenreAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------- // 
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenreAsync(Guid id)
         {
             var response = await _genreService.DeleteGenreAsync(id);

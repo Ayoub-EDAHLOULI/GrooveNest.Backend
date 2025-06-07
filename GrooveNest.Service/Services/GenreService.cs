@@ -6,10 +6,14 @@ using GrooveNest.Utilities;
 
 namespace GrooveNest.Service.Services
 {
-    public class GenreService(IGenreRepository genreRepository) : IGenreService
+    public class GenreService : IGenreService // Fixed constructor syntax
     {
-        private readonly IGenreRepository _genreRepository = genreRepository;
+        private readonly IGenreRepository _genreRepository;
 
+        public GenreService(IGenreRepository genreRepository) // Added constructor body
+        {
+            _genreRepository = genreRepository;
+        }
 
         // -------------------------------------------------------------------------- //
         // ------------------------ GetAllGenresAsync METHODS ----------------------- //
@@ -26,12 +30,11 @@ namespace GrooveNest.Service.Services
             {
                 Id = g.Id,
                 Name = g.Name,
-                TrackCount = g.TrackGenres?.Count ?? 0
+                TrackCount = g.TrackGenres?.Count ?? 0 // Fixed syntax issue
             }).ToList();
 
             return ApiResponse<List<GenreResponseDto>>.SuccessResponse(genreDtos, "Genres retrieved successfully.");
         }
-
 
         // -------------------------------------------------------------------------- //
         // ------------------------ GetGenreByIdAsync METHODS ----------------------- //
@@ -46,11 +49,10 @@ namespace GrooveNest.Service.Services
             var genreDto = new GenreResponseDto
             {
                 Id = genre.Id,
-                Name = genre.Name,
+                Name = genre.Name
             };
             return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre retrieved successfully.");
         }
-
 
         // ------------------------------------------------------------------------- //
         // ------------------------ CreateGenreAsync METHODS ----------------------- //
@@ -77,11 +79,10 @@ namespace GrooveNest.Service.Services
             var genreDto = new GenreResponseDto
             {
                 Id = newGenre.Id,
-                Name = newGenre.Name,
+                Name = newGenre.Name
             };
             return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre created successfully.");
         }
-
 
         // ------------------------------------------------------------------------- //
         // ------------------------ UpdateGenreAsync METHODS ----------------------- //
@@ -117,11 +118,11 @@ namespace GrooveNest.Service.Services
             {
                 Id = existingGenre.Id,
                 Name = existingGenre.Name,
+                TrackCount = existingGenre.TrackGenres?.Count ?? 0
             };
 
             return ApiResponse<GenreResponseDto>.SuccessResponse(genreDto, "Genre updated successfully.");
         }
-
 
         // ------------------------------------------------------------------------- //
         // ------------------------ DeleteGenreAsync METHODS ----------------------- //
