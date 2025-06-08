@@ -278,14 +278,9 @@ namespace GrooveNest.Service.Services
                 UserName = user.UserName,
                 Email = user.Email,
                 Status = user.Status,
+                Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList(),
                 CreatedAt = user.CreatedAt
             };
-
-            // Validate if userResponseDto is null
-            if (userResponseDto == null)
-            {
-                return ApiResponse<UserResponseDto>.ErrorResponse("Failed to update user");
-            }
 
             // Return success response
             return ApiResponse<UserResponseDto>.SuccessResponse(userResponseDto, "User updated successfully");

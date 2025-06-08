@@ -37,7 +37,7 @@ namespace GrooveNest.Service.Services
                     Id = app.Id,
                     UserId = app.UserId,
                     UserName = userName,
-                    Message = app.Message,
+                    ArtistBio = app.ArtistBio,
                     SubmittedAt = app.SubmittedAt,
                     IsApproved = app.IsApproved
                 });
@@ -58,7 +58,6 @@ namespace GrooveNest.Service.Services
                 return ApiResponse<object>.ErrorResponse("No artist applications found.");
             }
 
-            // Get all users for filtering by user name or user id
             var usersResponse = await _userService.GetAllUsersAsync();
             var users = usersResponse.Data ?? [];
 
@@ -67,7 +66,7 @@ namespace GrooveNest.Service.Services
             {
                 artistApplications = artistApplications
                     .Where(app =>
-                        (app.Message != null && app.Message.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
+                        (!string.IsNullOrEmpty(app.StageName) && app.StageName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
                         users.Any(u =>
                             u.Id == app.UserId && (
                                 (!string.IsNullOrEmpty(u.UserName) && u.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
@@ -96,7 +95,13 @@ namespace GrooveNest.Service.Services
                     Id = app.Id,
                     UserId = app.UserId,
                     UserName = userName,
-                    Message = app.Message,
+                    StageName = app.StageName,
+                    ArtistBio = app.ArtistBio,
+                    MusicGenres = app.MusicGenres ?? [],
+                    SampleTrackLinks = app.SampleTrackLinks ?? [],
+                    InstagramUrl = app.InstagramUrl,
+                    TwitterUrl = app.TwitterUrl,
+                    YouTubeUrl = app.YouTubeUrl,
                     SubmittedAt = app.SubmittedAt,
                     IsApproved = app.IsApproved
                 });
@@ -110,6 +115,7 @@ namespace GrooveNest.Service.Services
 
             return ApiResponse<object>.SuccessResponse(result, "Paginated artist applications retrieved successfully.");
         }
+
 
 
         // -------------------------------------------------------------------------------------- //
@@ -129,7 +135,7 @@ namespace GrooveNest.Service.Services
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userName,
-                Message = artistApplication.Message,
+                ArtistBio = artistApplication.ArtistBio,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
@@ -159,7 +165,7 @@ namespace GrooveNest.Service.Services
             var artistApplication = new ArtistApplication
             {
                 UserId = artistApplicationCreateDto.UserId,
-                Message = StringValidator.TrimOrEmpty(artistApplicationCreateDto.Message),
+                ArtistBio = StringValidator.TrimOrEmpty(artistApplicationCreateDto.ArtistBio),
                 SubmittedAt = DateTime.UtcNow,
                 IsApproved = false // Default to false until approved
             };
@@ -171,7 +177,7 @@ namespace GrooveNest.Service.Services
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userResponse.Data.UserName,
-                Message = artistApplication.Message,
+                ArtistBio = artistApplication.ArtistBio,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
@@ -202,7 +208,7 @@ namespace GrooveNest.Service.Services
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userName,
-                Message = artistApplication.Message,
+                ArtistBio = artistApplication.ArtistBio,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
