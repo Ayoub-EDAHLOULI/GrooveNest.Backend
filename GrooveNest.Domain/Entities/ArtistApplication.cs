@@ -15,7 +15,7 @@ namespace GrooveNest.Domain.Entities
         public string? YouTubeUrl { get; set; }
 
         public bool IsApproved { get; set; } = false;
-        public ArtistApplicationStatus Status { get; set; } = ArtistApplicationStatus.Pending;
+        public string Status { get; set; } = "Pending";
         public string? RejectionReason { get; set; }
         public DateTime? DateReviewed { get; set; }
 

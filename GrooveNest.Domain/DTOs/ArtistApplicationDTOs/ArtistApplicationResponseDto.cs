@@ -12,13 +12,10 @@ namespace GrooveNest.Domain.DTOs.ArtistApplicationDTOs
         public string ArtistBio { get; set; } = string.Empty;
         public List<string> MusicGenres { get; set; } = [];
         public List<string> SampleTrackLinks { get; set; } = [];
-        public string? InstagramUrl { get; set; }
-        public string? TwitterUrl { get; set; }
-        public string? YouTubeUrl { get; set; }
+        public List<string> SocialLinks { get; set; } = [];
         public DateTime SubmittedAt { get; set; }
         public bool IsApproved { get; set; }
-
-        public ArtistApplicationStatus Status { get; set; }
+        public string Status { get; set; } = "Pending";
         public string? RejectionReason { get; set; }
         public DateTime? DateReviewed { get; set; }
     }

@@ -55,21 +55,28 @@ namespace GrooveNest.Service.Services
             {
                 var user = users.FirstOrDefault(u => u.Id == app.UserId);
                 var userName = user?.UserName ?? "Unknown User";
+                var email = user?.Email ?? "Unknown Email";
+
+                var socialLinks = new List<string>();
+                if (!string.IsNullOrWhiteSpace(app.InstagramUrl)) socialLinks.Add(app.InstagramUrl);
+                if (!string.IsNullOrWhiteSpace(app.TwitterUrl)) socialLinks.Add(app.TwitterUrl);
+                if (!string.IsNullOrWhiteSpace(app.YouTubeUrl)) socialLinks.Add(app.YouTubeUrl);
 
                 artistApplicationDtos.Add(new ArtistApplicationResponseDto
                 {
                     Id = app.Id,
                     UserId = app.UserId,
                     UserName = userName,
+                    Email = email,
                     StageName = app.StageName,
                     ArtistBio = app.ArtistBio,
                     MusicGenres = app.MusicGenres ?? [],
                     SampleTrackLinks = app.SampleTrackLinks ?? [],
-                    InstagramUrl = app.InstagramUrl,
-                    TwitterUrl = app.TwitterUrl,
-                    YouTubeUrl = app.YouTubeUrl,
                     SubmittedAt = app.SubmittedAt,
-                    IsApproved = app.IsApproved
+                    IsApproved = app.IsApproved,
+
+                    // You will need to update the DTO to accept SocialLinks
+                    SocialLinks = socialLinks
                 });
             }
 
@@ -81,6 +88,7 @@ namespace GrooveNest.Service.Services
 
             return ApiResponse<object>.SuccessResponse(result, "Paginated artist applications retrieved successfully.");
         }
+
 
 
 
@@ -119,6 +127,11 @@ namespace GrooveNest.Service.Services
 
             await _artistApplicationRepository.AddAsync(artistApplication);
 
+            var socialLinks = new List<string>();
+            if (!string.IsNullOrWhiteSpace(artistApplication.InstagramUrl)) socialLinks.Add(artistApplication.InstagramUrl);
+            if (!string.IsNullOrWhiteSpace(artistApplication.TwitterUrl)) socialLinks.Add(artistApplication.TwitterUrl);
+            if (!string.IsNullOrWhiteSpace(artistApplication.YouTubeUrl)) socialLinks.Add(artistApplication.YouTubeUrl);
+
             // Create the response DTO
             var artistApplicationResponseDto = new ArtistApplicationResponseDto
             {
@@ -129,9 +142,7 @@ namespace GrooveNest.Service.Services
                 ArtistBio = artistApplication.ArtistBio,
                 MusicGenres = artistApplication.MusicGenres,
                 SampleTrackLinks = artistApplication.SampleTrackLinks,
-                InstagramUrl = artistApplication.InstagramUrl,
-                TwitterUrl = artistApplication.TwitterUrl,
-                YouTubeUrl = artistApplication.YouTubeUrl,
+                SocialLinks = socialLinks,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
@@ -149,36 +160,47 @@ namespace GrooveNest.Service.Services
         // -------------------------------------------------------------------------------------- //
         public async Task<ApiResponse<ArtistApplicationResponseDto>> UpdateArtistApplicationAsync(Guid id, ArtistApplicationApprovalDto artistApplicationApprovalDto)
         {
-            // Get the existing artist application
             var artistApplication = await _artistApplicationRepository.GetByIdAsync(id);
             if (artistApplication == null)
             {
                 return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Artist application not found.");
             }
 
-            // Update the approval status
+            // Update status and dateReviewed
             artistApplication.IsApproved = artistApplicationApprovalDto.Approve;
+            artistApplication.DateReviewed = DateTime.UtcNow;
+            artistApplication.Status = artistApplicationApprovalDto.Approve ? "Approved" : "Rejected";
+            artistApplication.RejectionReason = artistApplicationApprovalDto.Approve ? null : artistApplicationApprovalDto.RejectionReason;
+
             await _artistApplicationRepository.UpdateAsync(artistApplication);
 
             // Get user info
             var user = await _userService.GetUserByIdAsync(artistApplication.UserId);
             var userName = user.Data?.UserName ?? "Unknown User";
+            var email = user.Data?.Email ?? "Unknown Email";
 
-            // Prepare response DTO
+            // Prepare social links
+            var socialLinks = new List<string>();
+            if (!string.IsNullOrWhiteSpace(artistApplication.InstagramUrl)) socialLinks.Add(artistApplication.InstagramUrl);
+            if (!string.IsNullOrWhiteSpace(artistApplication.TwitterUrl)) socialLinks.Add(artistApplication.TwitterUrl);
+            if (!string.IsNullOrWhiteSpace(artistApplication.YouTubeUrl)) socialLinks.Add(artistApplication.YouTubeUrl);
+
             var artistApplicationResponseDto = new ArtistApplicationResponseDto
             {
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userName,
+                Email = email,
                 StageName = artistApplication.StageName,
                 ArtistBio = artistApplication.ArtistBio,
-                MusicGenres = artistApplication.MusicGenres,
-                SampleTrackLinks = artistApplication.SampleTrackLinks,
-                InstagramUrl = artistApplication.InstagramUrl,
-                TwitterUrl = artistApplication.TwitterUrl,
-                YouTubeUrl = artistApplication.YouTubeUrl,
+                MusicGenres = artistApplication.MusicGenres ?? [],
+                SampleTrackLinks = artistApplication.SampleTrackLinks ?? [],
                 SubmittedAt = artistApplication.SubmittedAt,
-                IsApproved = artistApplication.IsApproved
+                IsApproved = artistApplication.IsApproved,
+                Status = artistApplication.Status,
+                RejectionReason = artistApplication.RejectionReason,
+                DateReviewed = artistApplication.DateReviewed,
+                SocialLinks = socialLinks
             };
 
             return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(
@@ -186,6 +208,7 @@ namespace GrooveNest.Service.Services
                 "Artist application updated successfully."
             );
         }
+
 
 
 
