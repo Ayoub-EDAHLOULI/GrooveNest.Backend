@@ -15,7 +15,7 @@ namespace GrooveNest.Domain.DTOs.ArtistApplicationDTOs
         public List<string> SocialLinks { get; set; } = [];
         public DateTime SubmittedAt { get; set; }
         public bool IsApproved { get; set; }
-        public string Status { get; set; } = "Pending";
+        public ArtistApplicationStatus Status { get; set; }
         public string? RejectionReason { get; set; }
         public DateTime? DateReviewed { get; set; }
     }

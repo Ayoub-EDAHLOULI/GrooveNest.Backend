@@ -1,5 +1,6 @@
 ﻿using GrooveNest.Domain.DTOs.ArtistApplicationDTOs;
 using GrooveNest.Domain.Entities;
+using GrooveNest.Domain.Enums;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
@@ -169,7 +170,9 @@ namespace GrooveNest.Service.Services
             // Update status and dateReviewed
             artistApplication.IsApproved = artistApplicationApprovalDto.Approve;
             artistApplication.DateReviewed = DateTime.UtcNow;
-            artistApplication.Status = artistApplicationApprovalDto.Approve ? "Approved" : "Rejected";
+            artistApplication.Status = artistApplicationApprovalDto.Approve
+                ? ArtistApplicationStatus.Approved
+                : ArtistApplicationStatus.Rejected;
             artistApplication.RejectionReason = artistApplicationApprovalDto.Approve ? null : artistApplicationApprovalDto.RejectionReason;
 
             await _artistApplicationRepository.UpdateAsync(artistApplication);
