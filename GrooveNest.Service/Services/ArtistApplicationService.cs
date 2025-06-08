@@ -214,23 +214,38 @@ namespace GrooveNest.Service.Services
             {
                 return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Artist application not found.");
             }
+
             // Update the approval status
             artistApplication.IsApproved = artistApplicationApprovalDto.Approve;
             await _artistApplicationRepository.UpdateAsync(artistApplication);
-            // Create the response DTO
+
+            // Get user info
             var user = await _userService.GetUserByIdAsync(artistApplication.UserId);
             var userName = user.Data?.UserName ?? "Unknown User";
+
+            // Prepare response DTO
             var artistApplicationResponseDto = new ArtistApplicationResponseDto
             {
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userName,
+                StageName = artistApplication.StageName,
                 ArtistBio = artistApplication.ArtistBio,
+                MusicGenres = artistApplication.MusicGenres,
+                SampleTrackLinks = artistApplication.SampleTrackLinks,
+                InstagramUrl = artistApplication.InstagramUrl,
+                TwitterUrl = artistApplication.TwitterUrl,
+                YouTubeUrl = artistApplication.YouTubeUrl,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
-            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationResponseDto, "Artist application updated successfully.");
+
+            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(
+                artistApplicationResponseDto,
+                "Artist application updated successfully."
+            );
         }
+
 
 
         // -------------------------------------------------------------------------------------- //
