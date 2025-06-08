@@ -17,9 +17,9 @@ namespace GrooveNest.API.Controllers
         // ------------------------------------------------------------------------------------------- // 
 
         [HttpGet]
-        public async Task<IActionResult> GetPaginatedArtistApplicationAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string search = "")
+        public async Task<IActionResult> GetPaginatedArtistApplicationAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string search = "")
         {
-            var response = await _artistApplicationService.GetAllPaginatedArtistApplicationsAsync(pageNumber, pageSize, search);
+            var response = await _artistApplicationService.GetAllPaginatedArtistApplicationsAsync(page, pageSize, search);
             if (!response.Success)
             {
                 return BadRequest(response);
