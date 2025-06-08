@@ -13,40 +13,6 @@ namespace GrooveNest.Service.Services
 
 
 
-        // ------------------------------------------------------------------------------------- //
-        // ------------------------ GetAllArtistApplicationAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<List<ArtistApplicationResponseDto>>> GetAllArtistApplicationsAsync()
-        {
-            var artistApplications = await _artistApplicationRepository.GetAllAsync();
-
-            if (artistApplications == null || !artistApplications.Any())
-            {
-                return ApiResponse<List<ArtistApplicationResponseDto>>.ErrorResponse("No artist applications found.");
-            }
-
-            var artistApplicationDtos = new List<ArtistApplicationResponseDto>();
-
-            foreach (var app in artistApplications)
-            {
-                var user = await _userService.GetUserByIdAsync(app.UserId);
-                var userName = user.Data?.UserName ?? "Unknown User";
-
-                artistApplicationDtos.Add(new ArtistApplicationResponseDto
-                {
-                    Id = app.Id,
-                    UserId = app.UserId,
-                    UserName = userName,
-                    ArtistBio = app.ArtistBio,
-                    SubmittedAt = app.SubmittedAt,
-                    IsApproved = app.IsApproved
-                });
-            }
-
-            return ApiResponse<List<ArtistApplicationResponseDto>>.SuccessResponse(artistApplicationDtos, "Artist applications retrieved successfully.");
-        }
-
-
         // ------------------------------------------------------------------------------------------- //
         // ------------------------ GetPaginatedArtistApplicationAsync METHODS ----------------------- //
         // ------------------------------------------------------------------------------------------- // 
@@ -116,31 +82,6 @@ namespace GrooveNest.Service.Services
             return ApiResponse<object>.SuccessResponse(result, "Paginated artist applications retrieved successfully.");
         }
 
-
-
-        // -------------------------------------------------------------------------------------- //
-        // ------------------------ GetArtistApplicationByIdAsync METHODS ----------------------- //
-        // -------------------------------------------------------------------------------------- //
-        public async Task<ApiResponse<ArtistApplicationResponseDto>> GetArtistApplicationByIdAsync(Guid id)
-        {
-            var artistApplication = await _artistApplicationRepository.GetByIdAsync(id);
-            if (artistApplication == null)
-            {
-                return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("Artist application not found.");
-            }
-            var user = await _userService.GetUserByIdAsync(artistApplication.UserId);
-            var userName = user.Data?.UserName ?? "Unknown User";
-            var artistApplicationDto = new ArtistApplicationResponseDto
-            {
-                Id = artistApplication.Id,
-                UserId = artistApplication.UserId,
-                UserName = userName,
-                ArtistBio = artistApplication.ArtistBio,
-                SubmittedAt = artistApplication.SubmittedAt,
-                IsApproved = artistApplication.IsApproved
-            };
-            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationDto, "Artist application retrieved successfully.");
-        }
 
 
         // -------------------------------------------------------------------------------------- //

@@ -11,21 +11,6 @@ namespace GrooveNest.API.Controllers
         private readonly ArtistApplicationService _artistApplicationService = artistApplicationService;
 
 
-        // ------------------------------------------------------------------------------------- //
-        // ------------------------ GetAllArtistApplicationAsync METHODS ----------------------- //
-        // ------------------------------------------------------------------------------------- // 
-
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllArtistApplicationAsync()
-        {
-            var response = await _artistApplicationService.GetAllArtistApplicationsAsync();
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
-        }
-
 
         // ------------------------------------------------------------------------------------------- //
         // ------------------------ GetPaginatedArtistApplicationAsync METHODS ----------------------- //
@@ -35,22 +20,6 @@ namespace GrooveNest.API.Controllers
         public async Task<IActionResult> GetPaginatedArtistApplicationAsync([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string search = "")
         {
             var response = await _artistApplicationService.GetAllPaginatedArtistApplicationsAsync(pageNumber, pageSize, search);
-            if (!response.Success)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
-        }
-
-
-        // -------------------------------------------------------------------------------------- //
-        // ------------------------ GetArtistApplicationByIdAsync METHODS ----------------------- //
-        // -------------------------------------------------------------------------------------- //
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetArtistApplicationByIdAsync(Guid id)
-        {
-            var response = await _artistApplicationService.GetArtistApplicationByIdAsync(id);
             if (!response.Success)
             {
                 return BadRequest(response);
