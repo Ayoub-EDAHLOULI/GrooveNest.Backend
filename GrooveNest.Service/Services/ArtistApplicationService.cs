@@ -148,7 +148,6 @@ namespace GrooveNest.Service.Services
         // -------------------------------------------------------------------------------------- //
         public async Task<ApiResponse<ArtistApplicationResponseDto>> CreateArtistApplicationAsync(ArtistApplicationCreateDto artistApplicationCreateDto)
         {
-
             // Validate the input DTO
             if (artistApplicationCreateDto == null || artistApplicationCreateDto.UserId == Guid.Empty)
             {
@@ -161,14 +160,22 @@ namespace GrooveNest.Service.Services
             {
                 return ApiResponse<ArtistApplicationResponseDto>.ErrorResponse("User not found.");
             }
+
             // Create the artist application
             var artistApplication = new ArtistApplication
             {
                 UserId = artistApplicationCreateDto.UserId,
+                StageName = StringValidator.TrimOrEmpty(artistApplicationCreateDto.StageName),
                 ArtistBio = StringValidator.TrimOrEmpty(artistApplicationCreateDto.ArtistBio),
+                MusicGenres = artistApplicationCreateDto.MusicGenres ?? [],
+                SampleTrackLinks = artistApplicationCreateDto.SampleTrackLinks ?? [],
+                InstagramUrl = artistApplicationCreateDto.InstagramUrl,
+                TwitterUrl = artistApplicationCreateDto.TwitterUrl,
+                YouTubeUrl = artistApplicationCreateDto.YouTubeUrl,
                 SubmittedAt = DateTime.UtcNow,
                 IsApproved = false // Default to false until approved
             };
+
             await _artistApplicationRepository.AddAsync(artistApplication);
 
             // Create the response DTO
@@ -177,13 +184,23 @@ namespace GrooveNest.Service.Services
                 Id = artistApplication.Id,
                 UserId = artistApplication.UserId,
                 UserName = userResponse.Data.UserName,
+                StageName = artistApplication.StageName,
                 ArtistBio = artistApplication.ArtistBio,
+                MusicGenres = artistApplication.MusicGenres,
+                SampleTrackLinks = artistApplication.SampleTrackLinks,
+                InstagramUrl = artistApplication.InstagramUrl,
+                TwitterUrl = artistApplication.TwitterUrl,
+                YouTubeUrl = artistApplication.YouTubeUrl,
                 SubmittedAt = artistApplication.SubmittedAt,
                 IsApproved = artistApplication.IsApproved
             };
 
-            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(artistApplicationResponseDto, "Artist application created successfully.");
+            return ApiResponse<ArtistApplicationResponseDto>.SuccessResponse(
+                artistApplicationResponseDto,
+                "Artist application created successfully."
+            );
         }
+
 
 
         // -------------------------------------------------------------------------------------- //
