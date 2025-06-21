@@ -74,5 +74,22 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+
+        // -------------------------------------------------------------------------------------------- //
+        // ------------------------ IsUserSubmitArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------------- //
+
+        [HttpGet("isUserSubmitArtistApplication/{userId}")]
+        public async Task<IActionResult> IsUserSubmitArtistApplicationAsync(Guid userId)
+        {
+            var response = await _artistApplicationService.IsUserSubmitArtistApplicationAsync(userId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

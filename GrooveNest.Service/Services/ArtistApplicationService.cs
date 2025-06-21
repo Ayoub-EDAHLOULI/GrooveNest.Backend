@@ -4,6 +4,7 @@ using GrooveNest.Domain.Enums;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrooveNest.Service.Services
 {
@@ -230,5 +231,38 @@ namespace GrooveNest.Service.Services
             await _artistApplicationRepository.DeleteAsync(artistApplication);
             return ApiResponse<string>.SuccessResponse(string.Empty, "Artist application deleted successfully.");
         }
+
+
+
+        // -------------------------------------------------------------------------------------------- //
+        // ------------------------ IsUserSubmitArtistApplicationAsync METHODS ------------------------ //
+        // -------------------------------------------------------------------------------------------- //
+        public async Task<ApiResponse<ArtistApplicationApprovalDto>> IsUserSubmitArtistApplicationAsync(Guid userId)
+        {
+            // Validate the user ID
+            if (userId == Guid.Empty)
+            {
+                return ApiResponse<ArtistApplicationApprovalDto>.ErrorResponse("Invalid user ID.");
+            }
+
+            // Try to find an existing artist application
+            var application = await _artistApplicationRepository.GetUserArtistApplicationAsync(userId);
+
+            if (application == null)
+            {
+                return ApiResponse<ArtistApplicationApprovalDto>.ErrorResponse("No application found for this user.");
+            }
+
+            // Prepare the response DTO
+            var artistApplicationApprovalDto = new ArtistApplicationApprovalDto
+            {
+                ApplicationId = application.Id,
+                Approve = application.IsApproved,
+                RejectionReason = application.RejectionReason,
+            };
+
+            return ApiResponse<ArtistApplicationApprovalDto>.SuccessResponse(artistApplicationApprovalDto);
+        }
+
     }
 }

@@ -9,5 +9,6 @@ namespace GrooveNest.Service.Interfaces
         Task<ApiResponse<ArtistApplicationResponseDto>> CreateArtistApplicationAsync(ArtistApplicationCreateDto artistApplicationCreateDto);
         Task<ApiResponse<ArtistApplicationResponseDto>> UpdateArtistApplicationAsync(Guid id, ArtistApplicationApprovalDto artistApplicationApprovalDto);
         Task<ApiResponse<string>> DeleteArtistApplicationAsync(Guid id);
+        Task<ApiResponse<ArtistApplicationApprovalDto>> IsUserSubmitArtistApplicationAsync(Guid userId);
     }
 }
