@@ -22,6 +22,18 @@ namespace GrooveNest.Repository.Repositories
         {
             return _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
+
+        public async Task<User?> GetUserDetails(Guid userId)
+        {
+            return await _context.Users
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .Include(u => u.Playlists)
+                .Where(u => u.Id == userId)
+                .FirstOrDefaultAsync();
+        }
+
+
         public async Task<User?> GetUserNameByIdAsync(Guid id)
         {
             return await _context.Users

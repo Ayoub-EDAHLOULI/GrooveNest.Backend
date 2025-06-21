@@ -105,5 +105,21 @@ namespace GrooveNest.API.Controllers
             }
             return Ok(response);
         }
+
+
+        // ------------------------------------------------------------------------------------ //
+        // ------------------------ GetUserByIdWithDetailsAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------------ //
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> GetUserByIdWithDetailsAsync(Guid id)
+        {
+            var response = await _userService.GetUserByIdWithDetailsAsync(id);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }

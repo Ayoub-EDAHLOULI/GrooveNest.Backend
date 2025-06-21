@@ -1,4 +1,5 @@
-﻿using GrooveNest.Domain.DTOs.UserDTOs;
+﻿using GrooveNest.Domain.DTOs.PlaylistDTOs;
+using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Domain.Enums;
 using GrooveNest.Domain.Validators;
@@ -309,5 +310,56 @@ namespace GrooveNest.Service.Services
             // Return success response
             return ApiResponse<string>.SuccessResponse("User deleted successfully");
         }
+
+
+        // ------------------------------------------------------------------------------------ //
+        // ------------------------ GetUserByIdWithDetailsAsync METHODS ----------------------- //
+        // ------------------------------------------------------------------------------------ //
+        public async Task<ApiResponse<object>> GetUserByIdWithDetailsAsync(Guid id)
+        {
+            // Check if user exists
+            var user = await _userRepository.GetUserDetails(id);
+            if (user == null)
+            {
+                return ApiResponse<object>.ErrorResponse("User not found");
+            }
+
+            // Map to UserResponseDetails DTO
+            var userResponseDetails = new UserResponseDetails
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Status = user.Status,
+                CreatedAt = user.CreatedAt,
+                Roles = [.. user.UserRoles.Select(ur => ur.Role.Name)],
+                Playlists = [.. user.Playlists.Select(p => new PlaylistResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    CreatedAt = p.CreatedAt
+                })]
+            };
+
+            // Calculate the total playlist count
+            var totalPlaylists = userResponseDetails.Playlists.Count;
+
+
+            // Validate if userResponseDetails is null
+            if (userResponseDetails == null)
+            {
+                return ApiResponse<object>.ErrorResponse("Failed to retrieve user details");
+            }
+
+            var response = new
+            {
+                UserDetails = userResponseDetails,
+                TotalPlaylists = totalPlaylists
+            };
+
+            // Return success response
+            return ApiResponse<object>.SuccessResponse(response, "User details retrieved successfully");
+        }
+
     }
 }
