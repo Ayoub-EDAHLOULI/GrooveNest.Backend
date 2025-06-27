@@ -1,7 +1,6 @@
 ﻿using GrooveNest.Domain.DTOs.PlaylistDTOs;
 using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
-using GrooveNest.Domain.Enums;
 using GrooveNest.Domain.Validators;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
@@ -223,7 +222,7 @@ namespace GrooveNest.Service.Services
 
                 // Check if username already exists
                 var existingUserName = await _userRepository.GetByUserNameAsync(trimmedUserName);
-                if (existingUserName != null)
+                if (existingUserName != null && existingUserName.Id != user.Id)
                 {
                     return ApiResponse<UserResponseDto>.ErrorResponse("Username already exists");
                 }
@@ -237,7 +236,7 @@ namespace GrooveNest.Service.Services
 
                 // Check if email already exists
                 var existingUserEmail = await _userRepository.GetByEmailAsync(trimmedEmail);
-                if (existingUserEmail != null)
+                if (existingUserEmail != null && existingUserEmail.Id != user.Id)
                 {
                     return ApiResponse<UserResponseDto>.ErrorResponse("Email already exists");
                 }

@@ -1,4 +1,5 @@
 ﻿using GrooveNest.Domain.DTOs.ArtistDTOs;
+using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
@@ -18,29 +19,26 @@ namespace GrooveNest.Service.Services
         // -------------------------------------------------------------------------- // 
         public async Task<ApiResponse<List<ArtistResponseDto>>> GetAllArtistsAsync()
         {
-            var artists = await _artistRepository.GetAllAsync();
-            if (artists == null || !artists.Any())
+            var artists = await _artistRepository.GetAllWithUsersAsync();
+
+            if (artists == null || artists.Count == 0)
             {
                 return ApiResponse<List<ArtistResponseDto>>.ErrorResponse("No artists found.");
             }
 
-            var artistDtos = await Task.WhenAll(artists.Select(async a =>
+            var artistDtos = artists.Select(a => new ArtistResponseDto
             {
-                var userResponse = a.UserId.HasValue ? await _userRepository.GetUserByIdAsync(a.UserId.Value) : null;
-                var user = userResponse?.Data; // Extract the UserResponseDto from ApiResponse<UserResponseDto>
+                Id = a.Id,
+                Name = a.Name,
+                Bio = a.Bio,
+                UserName = a.User?.UserName ?? "Unknown",
+                ProfilePictureUrl = a.AvatarUrl
+            }).ToList();
 
-                return new ArtistResponseDto
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Bio = a.Bio,
-                    UserName = user?.UserName ?? "Unknown",
-                    ProfilePictureUrl = a.AvatarUrl
-                };
-            }));
-
-            return ApiResponse<List<ArtistResponseDto>>.SuccessResponse(artistDtos.ToList(), "Artists retrieved successfully.");
+            return ApiResponse<List<ArtistResponseDto>>.SuccessResponse(artistDtos, "Artists retrieved successfully.");
         }
+
+
 
 
         // ------------------------------------------------------------------------------------ //
@@ -48,31 +46,32 @@ namespace GrooveNest.Service.Services
         // ------------------------------------------------------------------------------------ // 
         public async Task<ApiResponse<object>> GetAllPaginatedArtistsAsync(int page = 1, int pageSize = 10, string searchQuery = "")
         {
-            var artists = await _artistRepository.GetAllAsync();
-            if (artists == null || !artists.Any())
+            var artists = await _artistRepository.GetAllWithUsersAsync();
+
+            if (artists == null || artists.Count == 0)
             {
                 return ApiResponse<object>.ErrorResponse("No artists found.");
             }
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            // Apply search filtering
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                artists = artists.Where(a => a.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+                artists = [.. artists.Where(a => a.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))];
             }
 
-            var totalCount = artists.Count();
-            var artistDtos = await Task.WhenAll(artists.Select(async a =>
-            {
-                var userResponse = a.UserId.HasValue ? await _userRepository.GetUserByIdAsync(a.UserId.Value) : null;
-                var user = userResponse?.Data; // Extract the UserResponseDto from ApiResponse<UserResponseDto>
-                return new ArtistResponseDto
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Bio = a.Bio,
-                    UserName = user?.UserName ?? "Unknown"
-                };
-            }));
+            var totalCount = artists.Count;
 
+            // Map to DTOs (no need for async since user info is already included)
+            var artistDtos = artists.Select(a => new ArtistResponseDto
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Bio = a.Bio,
+                UserName = a.User?.UserName ?? "Unknown",
+                ProfilePictureUrl = a.AvatarUrl
+            }).ToList();
+
+            // Apply pagination
             var paginatedArtists = artistDtos
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -81,11 +80,12 @@ namespace GrooveNest.Service.Services
             var response = new
             {
                 PaginatedArtists = paginatedArtists,
-                TotalArtists = totalCount,
+                TotalArtists = totalCount
             };
 
             return ApiResponse<object>.SuccessResponse(response, "Paginated artists retrieved successfully.");
         }
+
 
 
         // --------------------------------------------------------------------------- //
