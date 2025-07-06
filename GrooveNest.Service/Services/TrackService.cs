@@ -21,7 +21,7 @@ namespace GrooveNest.Service.Services
         public async Task<ApiResponse<TrackResponseDto>> CreateTrackAsync(TrackCreateDto trackCreateDto, IFormFile AudioFile)
         {
             // Validate title
-            if (!StringValidator.IsNullOrWhiteSpace(trackCreateDto.Title))
+            if (StringValidator.IsNullOrWhiteSpace(trackCreateDto.Title))
             {
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Track title cannot be empty.");
             }
@@ -52,10 +52,9 @@ namespace GrooveNest.Service.Services
                 return ApiResponse<TrackResponseDto>.ErrorResponse("Artist does not exist.");
             }
 
-            if (trackCreateDto.AlbumId != Guid.Empty)
+            if (trackCreateDto.AlbumId.HasValue)
             {
-                // Check if album exists
-                var albumExists = await _albumRepository.GetByIdAsync(trackCreateDto.AlbumId);
+                var albumExists = await _albumRepository.GetByIdAsync(trackCreateDto.AlbumId.Value);
                 if (albumExists == null)
                 {
                     return ApiResponse<TrackResponseDto>.ErrorResponse("Album does not exist.");
@@ -110,7 +109,10 @@ namespace GrooveNest.Service.Services
                 ArtistId = newTrack.ArtistId,
                 ArtistName = artistExists.Name,
                 AlbumId = newTrack.AlbumId,
-                AlbumTitle = newTrack.AlbumId.HasValue ? (await _albumRepository.GetByIdAsync(newTrack.AlbumId.Value))?.Title : null
+                AlbumTitle = newTrack.AlbumId.HasValue
+                            ? (await _albumRepository.GetByIdAsync(newTrack.AlbumId.Value))?.Title
+                            : null
+
             };
 
             return ApiResponse<TrackResponseDto>.SuccessResponse(responseDto, "Track created successfully.");

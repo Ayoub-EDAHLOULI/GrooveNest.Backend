@@ -7,6 +7,9 @@
         public int DurationSec { get; set; }
         public string AudioUrl { get; set; } = null!;
         public int TrackNumber { get; set; }
+        public bool IsPublished { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
 
 
         // --------------------------------------------------- //

@@ -246,8 +246,7 @@ namespace GrooveNest.Service.Services
                     return ApiResponse<ArtistResponseDto>.ErrorResponse("Avatar must be an image file.");
                 }
 
-                string? newAvatarUrl = null;
-
+                string? newAvatarUrl;
                 try
                 {
                     newAvatarUrl = await SaveAvatarAsync(artistUpdateDto.Avatar);

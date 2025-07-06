@@ -81,7 +81,8 @@ namespace GrooveNest.API.Controllers
         // -------------------------------------------------------------------------- // 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateArtistAsync(Guid id, [FromBody] ArtistUpdateDto artistUpdateDto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateArtistAsync(Guid id, [FromForm] ArtistUpdateDto artistUpdateDto)
         {
             var response = await _artistService.UpdateArtistAsync(id, artistUpdateDto);
             if (!response.Success)

@@ -12,7 +12,7 @@ namespace GrooveNest.Repository.Repositories
             return await _context.Tracks
                 .Include(t => t.Artist)
                 .Include(t => t.Album)
-                .FirstOrDefaultAsync(t => t.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefaultAsync(t => t.Title.ToLower() == title.ToLower());
         }
 
         public async Task<IEnumerable<Track>> GetTracksByAlbumIdAsync(Guid albumId)
