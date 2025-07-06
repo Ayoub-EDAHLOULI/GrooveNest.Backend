@@ -92,6 +92,7 @@ namespace GrooveNest.Service.Services
                 TrackNumber = trackCreateDto.TrackNumber,
                 AudioUrl = relativeAudioUrl,
                 DurationSec = durationSec,
+                IsPublished = trackCreateDto.IsPublished,
                 ArtistId = trackCreateDto.ArtistId,
                 AlbumId = trackCreateDto.AlbumId
             };
