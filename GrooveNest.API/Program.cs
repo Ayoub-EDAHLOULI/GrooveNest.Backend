@@ -154,6 +154,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// ✅ Add this to serve files from wwwroot
+app.UseStaticFiles();
+
 // ✅ CORS
 app.UseCors("AllowFrontend");
 

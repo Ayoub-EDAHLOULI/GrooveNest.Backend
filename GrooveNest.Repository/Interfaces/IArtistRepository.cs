@@ -6,5 +6,6 @@ namespace GrooveNest.Repository.Interfaces
     {
         Task<Artist?> GetArtistByName(string artistName);
         Task<List<Artist>> GetAllWithUsersAsync();
+        Task<Artist?> GetArtistWithDetails(Guid id);
     }
 }

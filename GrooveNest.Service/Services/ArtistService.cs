@@ -1,4 +1,7 @@
-﻿using GrooveNest.Domain.DTOs.ArtistDTOs;
+﻿using GrooveNest.Domain.DTOs.AlbumDTOs;
+using GrooveNest.Domain.DTOs.ArtistDTOs;
+using GrooveNest.Domain.DTOs.GenreDTOs;
+using GrooveNest.Domain.DTOs.TrackDTOs;
 using GrooveNest.Domain.DTOs.UserDTOs;
 using GrooveNest.Domain.Entities;
 using GrooveNest.Repository.Interfaces;
@@ -89,25 +92,46 @@ namespace GrooveNest.Service.Services
 
 
         // --------------------------------------------------------------------------- //
-        // ------------------------ GetArtistByIdAsync METHODS ----------------------- //
+        // ------------------------ GetArtistByUserIdAsync METHODS ----------------------- //
         // --------------------------------------------------------------------------- // 
-        public async Task<ApiResponse<ArtistResponseDto>> GetArtistByIdAsync(Guid id)
+        public async Task<ApiResponse<ArtistDetailsResponseDto>> GetArtistByUserIdAsync(Guid id)
         {
-            var artist = await _artistRepository.GetByIdAsync(id);
+            var artist = await _artistRepository.GetArtistWithDetails(id);
             if (artist == null)
             {
-                return ApiResponse<ArtistResponseDto>.ErrorResponse("Artist not found.");
+                return ApiResponse<ArtistDetailsResponseDto>.ErrorResponse("Artist not found.");
             }
-            var userResponse = artist.UserId.HasValue ? await _userRepository.GetUserByIdAsync(artist.UserId.Value) : null;
-            var user = userResponse?.Data; // Extract the UserResponseDto from ApiResponse<UserResponseDto>
-            var artistDto = new ArtistResponseDto
+            var artistDto = new ArtistDetailsResponseDto
             {
                 Id = artist.Id,
                 Name = artist.Name,
                 Bio = artist.Bio,
-                UserName = user?.UserName ?? "Unknown"
+                UserName = artist.User?.UserName ?? "Unknown",
+                ProfilePictureUrl = artist.AvatarUrl,
+                Tracks = [.. artist.Tracks.Select(t => new TrackResponseDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    DurationSec = t.DurationSec,
+                    AudioUrl = t.AudioUrl
+                })],
+                Albums = [.. artist.Albums.Select(a => new AlbumResponseDto
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    CoverUrl = a.CoverUrl,
+                    ReleaseDate = a.ReleaseDate,
+
+                    Tracks = [.. a.Tracks.Select(t => new TrackResponseDto
+                    {
+                        Id = t.Id,
+                        Title = t.Title,
+                        DurationSec = t.DurationSec,
+                        AudioUrl = t.AudioUrl
+                    })]
+                })],
             };
-            return ApiResponse<ArtistResponseDto>.SuccessResponse(artistDto, "Artist retrieved successfully.");
+            return ApiResponse<ArtistDetailsResponseDto>.SuccessResponse(artistDto, "Artist retrieved successfully.");
         }
 
 

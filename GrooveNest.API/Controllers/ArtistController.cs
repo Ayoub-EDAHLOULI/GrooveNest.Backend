@@ -48,9 +48,9 @@ namespace GrooveNest.API.Controllers
         // --------------------------------------------------------------------------- // 
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetArtistByIdAsync(Guid id)
+        public async Task<IActionResult> GetArtistByUserIdAsync(Guid id)
         {
-            var response = await _artistService.GetArtistByIdAsync(id);
+            var response = await _artistService.GetArtistByUserIdAsync(id);
             if (!response.Success)
             {
                 return NotFound(response);

@@ -1,4 +1,6 @@
-﻿namespace GrooveNest.Domain.DTOs.AlbumDTOs
+﻿using GrooveNest.Domain.DTOs.TrackDTOs;
+
+namespace GrooveNest.Domain.DTOs.AlbumDTOs
 {
     public class AlbumResponseDto
     {
@@ -8,5 +10,7 @@
         public string? CoverUrl { get; set; }
         public Guid ArtistId { get; set; }
         public string ArtistName { get; set; } = null!;
+
+        public List<TrackResponseDto> Tracks { get; set; } = [];
     }
 }

@@ -18,7 +18,18 @@ namespace GrooveNest.Repository.Repositories
         public async Task<Artist?> GetArtistByName(string artistName)
         {
             return await _context.Artists
-                .FirstOrDefaultAsync(a => a.Name.ToLower() == artistName.ToLower());
+                .FirstOrDefaultAsync(a => a.Name == artistName);
+        }
+
+        public async Task<Artist?> GetArtistWithDetails(Guid id)
+        {
+            return await _context.Artists
+                .Include(a => a.User)
+                .Include(a => a.Tracks)
+                .Include(a => a.Albums)
+                .ThenInclude(a => a.Tracks)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(a => a.User != null && a.User.Id == id);
         }
     }
 }
