@@ -113,7 +113,9 @@ namespace GrooveNest.Service.Services
                     Id = t.Id,
                     Title = t.Title,
                     DurationSec = t.DurationSec,
-                    AudioUrl = t.AudioUrl
+                    AudioUrl = t.AudioUrl,
+                    IsPublished = t.IsPublished,
+                    CreatedAt = t.CreatedAt,
                 })],
                 Albums = [.. artist.Albums.Select(a => new AlbumResponseDto
                 {
@@ -127,7 +129,9 @@ namespace GrooveNest.Service.Services
                         Id = t.Id,
                         Title = t.Title,
                         DurationSec = t.DurationSec,
-                        AudioUrl = t.AudioUrl
+                        AudioUrl = t.AudioUrl,
+                        IsPublished = t.IsPublished,
+                        CreatedAt = t.CreatedAt,
                     })]
                 })],
             };

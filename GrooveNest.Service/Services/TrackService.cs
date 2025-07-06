@@ -4,7 +4,6 @@ using GrooveNest.Repository.Interfaces;
 using GrooveNest.Service.Interfaces;
 using GrooveNest.Utilities;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 
 namespace GrooveNest.Service.Services
 {

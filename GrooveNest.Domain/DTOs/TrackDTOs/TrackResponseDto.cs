@@ -7,6 +7,8 @@
         public int DurationSec { get; set; }
         public string AudioUrl { get; set; } = null!;
         public int TrackNumber { get; set; }
+        public bool IsPublished { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public Guid ArtistId { get; set; }
         public string ArtistName { get; set; } = null!;
